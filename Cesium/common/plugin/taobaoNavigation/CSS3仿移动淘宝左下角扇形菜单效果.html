@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CSS3仿移动淘宝左下角扇形菜单效果</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/base.css">
+
+</head>
+<body>
+<div class="sector_menu">
+   <div class="sectorM_list">
+      <ul class="sectorM_sector">
+           <li class="se1"><a href="#">我的淘宝</a></li>
+           <li class="se2"><a href="#">购物车</a></li>
+           <li class="se3"><a href="#">搜索</a></li>
+           <li class="se4"><a href="#">更多</a></li>
+           <li class="se5"><a href="#">物流</a></li>
+           <li class="se6"><a href="#">旺旺</a></li>
+      </ul>
+          <ul class="sectorM_icon">
+           <li class="se1"><a href="#">我的淘宝</a></li>
+           <li class="se2"><a href="#">购物车</a></li>
+           <li class="se3"><a href="#">搜索</a></li>
+           <li class="se4"><a href="#">更多</a></li>
+           <li class="se5"><a href="#">物流</a></li>
+           <li class="se6"><a href="#">旺旺</a></li>
+      </ul>
+      <div class="sectorM_home">
+        <a href="#home">
+          <span>主页</span>
+        </a>
+      </div>
+      <div class="sectorM_link">
+<img src="css/link.png" width="100%" height="100%" border="0" usemap="#sectorM_map"/>
+<!-- 关于不规则图形上的点击事件---建议用热点 -->
+<!-- area 位置相当于定位了的z-index，越是靠前相当于z-index越大  如下面圆形热点circle 就是在页面中最靠近我们的， 画热点的时候位置一定要对应好，免得点击范围有误-->
+<map name="sectorM_map" id="sectorM_map">
+ <area shape="circle"  coords="141,142,62" href="#home" />
+  <area shape="poly" coords="139,142,9,64,140,0" href="#geren" />
+  <area shape="poly" coords="139,143,278,64,142,5" href="#gouwu" />
+<area shape="poly" coords="141,142,279,220,277,66" href="#cha" />
+  <area shape="poly" coords="142,143,138,269,278,223" href="#else" />
+  <area shape="poly" coords="138,142,4,216,138,269" href="#wuliu" />
+  <area shape="poly" coords="137,143,10,66,5,213" href="#ke" />
+</map>
+</div>
+   </div><!-- 菜单容器 -->
+    <div class="sectorM_fouce">
+       <a href="javascript:void(0)">
+         <span>工具</span>
+       </a>
+    </div><!-- 菜单触发点 -->
+
+</div>
+  <script>
+  $(function(){
+$(".sectorM_fouce a").click(function(){
+ if($(this).attr("class") == "open"){
+  $(this).removeClass("open");
+  $(this).addClass("close");
+  $(".sectorM_list").removeClass("open");
+  $(".sectorM_list").addClass("close");
+ }else{
+  $(this).removeClass("close");
+  $(this).addClass("open");
+  $(".sectorM_list").removeClass("close");
+  $(".sectorM_list").addClass("open");
+ }
+  })
+
+
+$("#sectorM_map area[shape='circle']").hover(function() {
+ $(".sectorM_home").addClass('cur')
+}, function() {
+  $(".sectorM_home").removeClass('cur')
+});
+
+
+
+
+$("#sectorM_map area[shape='poly']").hover(function() {
+i = $(this).index();
+ $(".sectorM_icon li").eq(i-1).show();
+ $(".sectorM_sector li").eq(i-1).addClass('cur')
+}, function() {
+  $(".sectorM_icon li").eq(i-1).hide();
+ $(".sectorM_sector li").eq(i-1).removeClass('cur')
+});
+
+
+ })
+  </script>
+</body>
+</html>

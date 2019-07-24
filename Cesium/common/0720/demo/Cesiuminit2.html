@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <title>Cesiuminit</title>
+    <script src="../../Build/Cesium/Cesium.js"></script>
+    <script src="../js/Cesium_init.js"></script>
+    
+    <style>
+       @import url(../../Build/Cesium/Widgets/widgets.css);
+       @import url(../../Apps/Sandcastle/templates/bucket.css);
+        html, body, #cesiumContainer {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #menu {
+            position: absolute;
+            top: 80px;
+            left: 10px;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <div id="cesiumContainer" class="fullSize"></div>
+    <div id="creditContainer" style="display: none;"></div>
+    <span style="white-space:pre"></span>
+    
+    <script>
+    var mtdt = new Cesium.WebMapTileServiceImageryProvider({
+        url: 'http://t0.tianditu.com/img_w/wmts?',
+        layer: 'img',
+        style: 'default',
+        format: 'tiles',
+        tileMatrixSetID: 'w',
+        credit: new Cesium.Credit('天地图全球影像服务'),
+        maximumLevel: 18
+    });
+    var GoogleMap = ImageryProviderWebExtendTool.createGoogleMapsByUrl(Cesium, { url: "http://mt1.google.cn/vt/lyrs=s&hl=zh-CN&x={x}&y={y}&z={z}" });
+
+     var viewer = new Cesium.Viewer('cesiumContainer', {
+        imageryProvider: GoogleMap,
+        selectionIndicator: false,
+        animation: false,
+        baseLayerPicker: false,
+        geocoder: false,
+        timeline: false,
+        sceneModePicker: true,
+        navigationHelpButton: false,
+        infoBox: false,
+        fullscreenButton: true
+    });
+    VectorTileImageryProvider = Cesium.VectorTileImageryProvider;
+    var terrainProvider = new Cesium.CesiumTerrainProvider({
+            url: '../data/terrain/ctb-merger/'
+        });
+    viewer.terrainProvider = terrainProvider;
+    //设置homebutton的位置
+    Cesium.Camera.DEFAULT_VIEW_RECTANGLE =
+                Cesium.Rectangle.fromDegrees(127.0, 41.0, 129.0, 43.0);//Rectangle(west, south, east, north)
+    //设置初始位置
+    viewer.camera.setView({
+            destination: Cesium.Cartesian3.fromDegrees(128.055, 42.006, 30000)
+        });
+    viewer.scene.debugShowFramesPerSecond = true;
+    var color = new _cesiumTool({viewer:viewer}).getColor(50)
+    var provinceLayer = null;
+    Cesium.loadText("../data/vector/bjsx.json").then(function (geojson) {
+        geojson = eval("(" + geojson + ")");
+        console.log(VectorTileController);
+		VectorTileController.init({viewer:viewer,outlineColor:'red',lineWidth:1});
+        VectorTileController.build({handleType:"",'geojson':geojson,'LayesSource':'../data/vector/world/NnewGJborder.shp'});
+      
+    })
+    function rm(){
+        
+        TileLonlatController.controller(0.5,true);
+    }
+    </script>
+    </body>
+</html>

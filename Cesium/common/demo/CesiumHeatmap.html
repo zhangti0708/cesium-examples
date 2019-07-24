@@ -5,13 +5,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-    <title>radarScan</title>
+    <title>CesiumHeatmap</title>
     <script src="../../Build/Cesium/Cesium.js"></script>
-    <script src="../js/ImageryProviderWebExtendTool.js"></script>
+    <script src="../js/Cesium_init.js"></script>
     <script src="../js/CesiumHeatmap.js"></script>
 
     <style>
        @import url(../../Build/Cesium/Widgets/widgets.css);
+	   @import url(../../Apps/Sandcastle/templates/bucket.css);
         html, body, #cesiumContainer {
             width: 100%;
             height: 100%;
@@ -28,11 +29,6 @@
     </style>
 </head>
 <body>
-        <div id="menu">
-            <p>
-                <button onclick="remove()">清除</button>
-            </p>
-        </div>
         <div id="cesiumContainer" class="fullSize"></div>
         <div id="creditContainer" style="display: none;"></div>
         <span style="white-space:pre"></span>
@@ -76,27 +72,29 @@
                 coordinatesArr.push(feature.geometry.coordinates);
             });
 
-           //调用示例
-            var heatmapdata = {
-                    handleType:"CesiumHeatmap", //CesiumHeatmap CesiumHeatmapGL
-                    viewer:viewer,
-                    datas: {
-                       type: "wfs",         //wfs url
-                       obj : coordinatesArr //coordinatesArr geoJsonUrl
-                    }
 
+
+
+        //调用示例
+        var heatmapdata = {
+                handleType:"", //CesiumHeatmap CesiumHeatmapGL
+                datas: {
+                    type: "url",         //wfs url
+                    obj : '../data/busstop2016.geojson' //coordinatesArr geoJsonUrl
                 }
-            
-            heatMap.build(heatmapdata);
+
+            }
+            cesiumHeatMap.init({viewer:viewer});
+            cesiumHeatMap.build(heatmapdata);
 
         }
-        var heatMap =  new CesiumHeatMap();
+        getJSON('../data/busstop2016.geojson',getData);
         function remove(){
 
 
             heatMap.clear();
         }
-        getJSON('../data/busstop2016.geojson',getData);
+       
       
         </script>
     </body>

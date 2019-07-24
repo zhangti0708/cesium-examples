@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <title>Cesiuminit</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600">
+    <link rel="stylesheet" href="../css/from/normalize.min.css">
+</head>
+<body>
+    <div class="form">
+        <ul class="tab-group">
+            <li class="tab active">
+                <a href="#signup">
+                    Sign Up
+                </a>
+            </li>
+            <li class="tab">
+                <a href="#login">
+                    Log In
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div id="signup" style="display: block;">
+                <h1>
+                    Sign Up for Free
+                </h1>
+                <form action="/" method="post">
+                    <div class="top-row">
+                        <div class="field-wrap">
+                            <label class="active">
+                                First Name
+                                <span class="req">
+                                    *
+                                </span>
+                            </label>
+                            <input type="text" required="" autocomplete="off">
+                        </div>
+                        <div class="field-wrap">
+                            <label class="active">
+                                Last Name
+                                <span class="req">
+                                    *
+                                </span>
+                            </label>
+                            <input type="text" required="" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="field-wrap">
+                        <label class="active">
+                            Email Address
+                            <span class="req">
+                                *
+                            </span>
+                        </label>
+                        <input type="email" required="" autocomplete="off">
+                    </div>
+                    <div class="field-wrap">
+                        <label class="active">
+                            Set A Password
+                            <span class="req">
+                                *
+                            </span>
+                        </label>
+                        <input type="password" required="" autocomplete="off">
+                    </div>
+                    <button type="submit" class="button button-block">
+                    Get Started
+                    </button>
+                </form>
+            </div>
+            <div id="login" style="display: none;">
+                <h1>
+                    Welcome Back!
+                </h1>
+                <form action="/" method="post">
+                    <div class="field-wrap">
+                        <label class="active">
+                            Email Address
+                            <span class="req">
+                                *
+                            </span>
+                        </label>
+                        <input type="email" required="" autocomplete="off">
+                    </div>
+                    <div class="field-wrap">
+                        <label class="active">
+                            Password
+                            <span class="req">
+                                *
+                            </span>
+                        </label>
+                        <input type="password" required="" autocomplete="off">
+                    </div>
+                    <p class="forgot">
+                        <a href="#">
+                            Forgot Password?
+                        </a>
+                    </p>
+                    <button class="button button-block">
+                    Log In
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- tab-content -->
+    </div>
+    <!-- /form -->
+    <script src="../js/tool/jquery.min.js"></script>
+    <script src="../css/from/index.js"></script>
+
+
+</body>
+</html>

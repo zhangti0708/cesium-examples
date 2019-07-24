@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <title>CesiumSnow</title>
+    <script src="../../Build/Cesium/Cesium.js"></script>
+    <script src="../js/Cesium_init.js"></script>
+
+    <style>
+       @import url(../../Build/Cesium/Widgets/widgets.css);
+       @import url(../../Apps/Sandcastle/templates/bucket.css);
+        html, body, #cesiumContainer {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #menu {
+            position: absolute;
+            top: 180px;
+            left: 10px;
+            z-index: 999;
+        }
+        #toolbar {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            z-index: 999;
+        
+        }
+    </style>
+</head>
+<body>
+    <div id="cesiumContainer" class="fullSize"></div>
+    <div id="creditContainer" style="display: none;"></div>
+    <div id="toolbar">
+        <table><tbody>
+        <select class="cesium-button" onchange="_3DModulController.switch(this.value);">
+            <option value="Aircraft">Aircraft</option>
+            <option value="Ground Vehicle">Ground Vehicle</option>
+            <option value="Hot Air Balloon">Hot Air Balloon</option>
+            <option value="Milk Truck">Milk Truck</option>
+            <option value="Skinned Character">Skinned Character</option>
+        </select>
+        <tr><td class="header">Model Color</td></tr>
+        <tr>
+            <td>Mode</td>
+            <td><select data-bind="options: colorBlendModes, value: colorBlendMode"></select></td>
+        </tr>
+        <tr>
+            <td>Color</td>
+            <td>
+                <input type="range" min="0" max="147" step="1" data-bind="value: color, valueUpdate: 'input'">
+                <input type="text" size="5" data-bind="value: color">
+            </td>
+        </tr>
+        <tr>
+            <td>silhouetteSize</td>
+            <td>
+                <input type="range" min="0.0" max="10.0" step="1.0" data-bind="value: silhouetteSize, valueUpdate: 'input'">
+                <input type="text" size="5" data-bind="value: silhouetteSize">
+            </td>
+        </tr>
+        </tbody></table>
+    </div>
+    <span style="white-space:pre"></span>
+
+    <script>
+    var GoogleMap = ImageryProviderWebExtendTool.createGoogleMapsByUrl(Cesium, { url: "http://mt1.google.cn/vt/lyrs=s&hl=zh-CN&x={x}&y={y}&z={z}" });
+
+    var viewer = new Cesium.Viewer('cesiumContainer', {
+        imageryProvider: GoogleMap,
+        selectionIndicator: false,
+        animation: false,
+        baseLayerPicker: false,
+        geocoder: false,
+        timeline: false,
+        sceneModePicker: true,
+        navigationHelpButton: false,
+        infoBox: false,
+        fullscreenButton: true
+    });
+    var param = {
+            lon:34,
+            lat:118,
+            height:100
+    }
+    _3DModulController.init({viewer:viewer});
+    _3DModulController.show({module:'Aircraft',featrue:param});
+
+    </script>
+    </body>
+</html>

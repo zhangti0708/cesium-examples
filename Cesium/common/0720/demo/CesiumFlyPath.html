@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <title>CesiumFlyPath</title>
+    <script src="../../Build/Cesium/Cesium.js"></script>
+    <script src="../js/Cesium_init.js"></script>
+    <script src="../js/CesiumFlyPath.js"></script>
+    <style>
+       @import url(../../Build/Cesium/Widgets/widgets.css);
+        html, body, #cesiumContainer {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #menu {
+            position: absolute;
+            top: 80px;
+            left: 10px;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <div id="cesiumContainer" class="fullSize"></div>
+    <div id="creditContainer" style="display: none;"></div>
+    <div id="menu">
+        <p>
+            <button onclick="del()">删除</button>
+        </p>
+    </div>
+    <script>
+        //获取封装好的GoogleMap
+        var GoogleMap = ImageryProviderWebExtendTool.createGoogleMapsByUrl(Cesium, { url: "http://mt1.google.cn/vt/lyrs=s&hl=zh-CN&x={x}&y={y}&z={z}" });
+
+        var viewer = new Cesium.Viewer('cesiumContainer', {
+            imageryProvider: GoogleMap,
+            creditContainer: "creditContainer",
+            selectionIndicator: true,
+            animation: false,
+            baseLayerPicker: false,
+            geocoder: false,
+            timeline: false,
+            sceneModePicker: true,
+            navigationHelpButton: false,
+            infoBox: true,
+            fullscreenButton: true
+        });
+        
+        var lat = 30.598026044; 
+        var lon = 114.302312702;
+        var center = { lon: 114.302312702, lat: 30.598026044 }
+        var cities = [{ "lon": 115.028495718, "lat": 30.200814617 },
+            { "lon": 110.795000473, "lat": 32.638540762 },
+            { "lon": 111.267729446, "lat": 30.698151246 },
+            { "lon": 112.126643144, "lat": 32.058588576 },
+            { "lon": 114.885884938, "lat": 30.395401912 },
+            { "lon": 112.190419415, "lat": 31.043949588 },
+            { "lon": 113.903569642, "lat": 30.932054050 },
+            { "lon": 112.226648859, "lat": 30.367904255 },
+            { "lon": 114.861716770, "lat": 30.468634833 },
+            { "lon": 114.317846048, "lat": 29.848946148 },
+            { "lon": 113.371985426, "lat": 31.704988330 },
+            { "lon": 109.468884533, "lat": 30.289012191 },
+            { "lon": 113.414585069, "lat": 30.368350431 },
+            { "lon": 112.892742589, "lat": 30.409306203 },
+            { "lon": 113.160853710, "lat": 30.667483468 },
+            { "lon": 110.670643354, "lat": 31.748540780 }]
+
+
+         //取消双击事件
+         viewer.cesiumWidget.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+       
+
+         CesiumFlyPath.init({
+            viewer : viewer,
+            color :Cesium.Color.ORANGE,  //纹理线条颜色
+            duration:3000,   //纹理线条持续时间
+            height:500000    //纹理线条高度
+        });
+
+        CesiumFlyPath.build({
+            handleType:'default',   //生成方式 默认
+            center:center,  //原点
+            cities:cities,  //目标点
+            zoom :300000, //原点视野
+            v : {c:Cesium.Color.BLUE,c2:Cesium.Color.RED} //原点color 目标点 color
+        });
+
+        function del(){
+
+         _cesiumFlyPath.clear();
+
+        }
+
+
+    </script>
+</body>
+</html>

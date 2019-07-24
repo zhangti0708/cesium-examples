@@ -7,11 +7,11 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
     <title>radarScan</title>
     <script src="../../Build/Cesium/Cesium.js"></script>
-    <script src="../js/ImageryProviderWebExtendTool.js"></script>
+    <script src="../js/Cesium_init.js"></script>
     <script src="../js/CesiumRadarScan.js"></script>
-
     <style>
        @import url(../../Build/Cesium/Widgets/widgets.css);
+       @import url(../../Apps/Sandcastle/templates/bucket.css);
         html, body, #cesiumContainer {
             width: 100%;
             height: 100%;
@@ -21,7 +21,7 @@
         }
         #menu {
             position: absolute;
-            top: 80px;
+            top:180px;
             left: 10px;
             z-index: 999;
         }
@@ -30,11 +30,6 @@
 <body>
     <div id="cesiumContainer" class="fullSize"></div>
     <div id="creditContainer" style="display: none;"></div>
-    <div id="menu">
-        <p>
-            <button onclick="clone()">删除</button>
-        </p>
-    </div>
     <script>
         /***
          * 雷达扫描接口
@@ -42,7 +37,7 @@
          * 实例
         */
         //创建googlemap 引入 ImageryProviderWebExtendTool.js
-        var GoogleMap = ImageryProviderWebExtendTool.createGoogleMapsByUrl(Cesium, { url: "http://mt1.google.cn/vt/lyrs=s&hl=zh-CN&x={x}&y={y}&z={z}" });
+        var GoogleMap = ImageryProviderWebExtendTool.createGoogleMapsByUrl(Cesium, { url: "http://mt1.google.cn/vt/lyrs=s&hl=zh-CN&x={x}&y={y}&z={z}"});
         var viewer = new Cesium.Viewer('cesiumContainer', {
             imageryProvider: GoogleMap,
             creditContainer: "creditContainer",
@@ -56,12 +51,18 @@
             infoBox: true,
             fullscreenButton: true
         });
-        
-        var lat = 40.70524201566827;// 42.006;
+        //设置初始位置
+        viewer.camera.setView({
+            destination: Cesium.Cartesian3.fromDegrees(128.055, 42.006, 30000)
+        });
+       /* var lat = 40.70524201566827;// 42.006;
         var lon = -74.01296152309055;//128.055;
         var lat2 = 40.60524201566827;// 42.006;
-        var lon2 = -74.01296152309055;//128.055;
-
+        var lon2 = -74.01296152309055;//128.055;*/
+        var lon = 117.217124;//经度
+        var lat = 31.809777;//纬度
+        var lon2 = 117.217124;//经度
+        var lat2 = 31.909777;//纬度
         /**
          * 1.实例化
          * 2.初始化
@@ -69,35 +70,18 @@
          * 4.绘制
          * 支持绘制多个雷达扫描
         */
-        var radarScan = new CesiumRadarScan();
-        radarScan.init({  //初始化
-            viewer:viewer,
-            zoom:300000
-        });
-        var radarScanData = {   //模型数据
-            datas:[{
-                handleType:'',  //创建模型类型
-                lon:lon,        //坐标
-                lat:lat,
-                radius:1500,       //半径 米
-                scanColor:new Cesium.Color(1.0, 0.0, 0.0, 1), //扫描颜色
-                duration:4000  //持续时间 毫秒
+        var datas = [
+            {
+            lon: 117.217124,//经度
+            lat: 31.809777, //纬度
             },
             {
-                handleType:'',  //创建模型类型
-                lon:lon2,        //坐标
-                lat:lat2,
-                radius:1500,       //半径 米
-                scanColor:new Cesium.Color(1.0, 0.0, 0.0, 1), //扫描颜色
-                duration:4000  //持续时间 毫秒
+            lon:117.217124,//经度
+            lat:31.909777, //纬度
             }
         ]
-        }
-        var radarScanResult = radarScan.build(radarScanData);  //建立模型
-        radarScan.draw(radarScanResult);    //绘制
-        function clone() {      //关闭模型
-            radarScan.removeAll();
-        }
+        CesiumRadar.init({viewer:viewer,scanColor:new Cesium.Color(0,1.0,2.0,1),r:1500,interval:4000});
+        var data = CesiumRadar.build({handleType:"scan",datas:datas});
     </script>
 </body>
 </html>

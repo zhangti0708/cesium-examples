@@ -1,0 +1,218 @@
+article,aside,details,figcaption,figure,footer,header,hgroup,nav,section {
+	display:block
+}
+audio,canvas,video {
+	display:inline-block;
+	*display:inline;
+	*zoom:1
+}
+audio:not([controls]) {
+	display:none
+}
+html {
+	font-size:100%;
+	-webkit-text-size-adjust:100%;
+	-ms-text-size-adjust:100%
+}
+a:focus {
+	outline:thin dotted #333;
+	outline:5px auto -webkit-focus-ring-color;
+	outline-offset:-2px
+}
+a:hover,a:active {
+	outline:0
+}
+sub,sup {
+	position:relative;
+	font-size:75%;
+	line-height:0;
+	vertical-align:baseline
+}
+sup {
+	top:-.5em
+}
+sub {
+	bottom:-.25em
+}
+img {
+	max-width:100%;
+	vertical-align:middle;
+	border:0;
+	-ms-interpolation-mode:bicubic
+}
+button,input,select,textarea {
+	margin:0;
+	font-size:100%;
+	vertical-align:middle
+}
+button,input {
+	*overflow:visible;
+	line-height:normal
+}
+button::-moz-focus-inner,input::-moz-focus-inner {
+	padding:0;
+	border:0
+}
+button,input[type="button"],input[type="reset"],input[type="submit"] {
+	cursor:pointer;
+	-webkit-appearance:button
+}
+input[type="search"] {
+	-webkit-box-sizing:content-box;
+	-moz-box-sizing:content-box;
+	box-sizing:content-box;
+	-webkit-appearance:textfield
+}
+input[type="search"]::-webkit-search-decoration,input[type="search"]::-webkit-search-cancel-button {
+	-webkit-appearance:none
+}
+textarea {
+	overflow:auto;
+	vertical-align:top
+}
+.clearfix {
+	*zoom:1
+}
+.clearfix:before,.clearfix:after {
+	display:table;
+	content:""
+}
+.clearfix:after {
+	clear:both
+}
+.hide-text {
+	font:0/0 a;
+	color:transparent;
+	text-shadow:none;
+	background-color:transparent;
+	border:0
+}
+.input-block-level {
+	display:block;
+	width:100%;
+	min-height:28px;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-ms-box-sizing:border-box;
+	box-sizing:border-box
+}
+.menu_button {
+	position:absolute;
+	bottom:25px;
+	right: 15px;
+	border-radius:50%;
+	height:36px;
+	width:36px;
+	border:4px solid #fff;
+	box-shadow:rgba(0,0,0,.3) 0 3px 8px 0,rgba(0,0,0,.2) 0 0 0 1px,inset rgba(0,0,0,.3) 0 0 0 1px,inset rgba(255,255,255,.3) 0 1px 0 1px;
+	text-indent:-99999px;
+	overflow:hidden;
+	background-color:#184669;
+	background-image:-moz-linear-gradient(top, #f76f54, #c61f1f);
+	background-image:-ms-linear-gradient(top, #f76f54, #c61f1f);
+	background-image:-webkit-gradient(linear,0 0,0 100%,from( #f76f54),to( #c61f1f));
+	background-image:-webkit-linear-gradient(top, #759dc003, #48b);
+	background-image:-o-linear-gradient(top, #f76f54, #c61f1f);
+	background-image:linear-gradient(top, #f76f54, #c61f1f);
+	background-repeat:repeat-x;
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f76f54', endColorstr='#c61f1f', GradientType=0);
+	z-index:9999;
+	outline:0
+}
+.menu_button span {
+	display:block;
+	height:36px;
+	width:36px;
+	background:url("./icon_add.svg") no-repeat center center;
+	-webkit-transition:.4s ease;
+	-moz-transition:.4s ease;
+	-ms-transition:.4s ease;
+	-o-transition:.4s ease;
+	transition:.4s ease
+}
+.menu_option {
+	bottom:60px;
+	right:55px;
+	position:absolute
+}
+.menu_option li {
+	position:absolute;
+	display:block;
+	top:0;
+	left:0;
+	-webkit-transition:.3s;
+	-moz-transition:.3s;
+	-ms-transition:.3s;
+	-o-transition:.3s;
+	transition:.3s
+}
+.menu_option li a {
+	position:relative;
+	display:block;
+	border-radius:50%;
+	width:26px;
+	height:26px;
+	border:3px solid #fff;
+	box-shadow:rgba(0,0,0,.4) 0 0 5px 0,rgba(0,0,0,.2) 0 0 0 1px,inset rgba(0,0,0,.5) 0 0 2px 0;
+	text-indent:-99999px;
+	overflow:hidden;
+	background:#759dc0f0
+}
+.menu_option li a span {
+	background-attachment:scroll;
+	background-clip:border-box;
+	background-color:transparent;
+	background-origin:padding-box;
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-size:16px 16px;
+	display:block;
+	width:26px;
+	height:26px;
+	-webkit-transition:.4s ease;
+	-moz-transition:.4s ease;
+	-ms-transition:.4s ease;
+	-o-transition:.4s ease;
+	transition:.4s ease
+}
+.btn-rotate span {
+	-webkit-transform:rotate(-135deg);
+	-moz-transform:rotate(-135deg);
+	-ms-transform:rotate(-135deg);
+	-o-transform:rotate(-135deg);
+	transform:rotate(-135deg)
+}
+.active .menu_option li a {
+	-webkit-animation:expand .6s ease 1 backwards;
+	-moz-animation:expand .6s ease 1 backwards;
+	-ms-animation:expand .6s ease 1 backwards;
+	-o-animation:expand .6s ease 1 backwards;
+	animation:expand .6s ease 1 backwards
+}
+@-webkit-keyframes expand {
+	0% {
+	top:0
+}
+50% {
+	top:-10px
+}
+70% {
+	top:10px
+}
+100% {
+	top:0
+}
+}@-moz-keyframes expand {
+	0% {
+	top:0
+}
+50% {
+	top:-10px
+}
+70% {
+	top:10px
+}
+100% {
+	top:0
+}
+}

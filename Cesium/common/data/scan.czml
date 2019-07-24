@@ -1,0 +1,50 @@
+[{
+        "id" : "document",
+        "name" : "CZML Path",
+        "version" : "1.0",
+        "clock": { //定时
+            "interval": "2019-05-27T10:00:00Z/2019-05-27T10:01:00Z", //60/60=1
+            "currentTime": "2019-05-27T10:00:00Z",//当前时间
+            "multiplier": 5 //动画的运行时间倍数，间隔显得速度快。现以10倍时间运行速度执行动画。和上方计算时一样。 不该上方计算出来的结果，那么增加这个值 就会提升时间倍数显得跑的快
+        }
+    }, {
+        "id" : "path",
+        "name" : "path with GPS flight data",
+        "description" : "",
+        "availability" : "2019-05-27T10:00:00Z/2019-05-27T10:01:00Z",
+        "path" : {
+            "material" : { //线的材质
+                "polylineOutline" : {
+                    "color" : {
+                        "rgba" : [255, 255, 255, 255] //和css不一样 末尾的 255 就相当于 1
+                    },
+                    "outlineColor" : {
+                        "rgba" : [0, 255, 255, 255]
+                    },
+                    "outlineWidth" : 5
+                }
+            },//路线的材质
+            "width" : 8, //线的宽度
+            "leadTime" : 0,//领先时间--领头的线长 置为间距全长1200那全程长度会显示出来
+            "trailTime" : 0,//全程时间--尾巴显示长度 置为0那么走完的路不再显示
+            "resolution" : 5 //
+        },
+        "billboard" : { //加billboard 也可以加载其他entity cesium会自己解析
+            "image" : "../images/logo.png",
+            "scale" :0.5,
+            "eyeOffset": {
+                "cartesian": [ 0.0, 0.0, -10.0 ]
+            },
+            "show":false
+        },
+        "position" : {
+            "epoch" : "2019-05-27T10:00:00Z",//动画起始时间
+            "cartographicDegrees" : [
+                0,117,35,0,
+                15,117.01,35,0,
+                30,117.01,35.01,0,
+                45,117,35.01,0,
+                60,117,35,0
+            ]
+        }
+    }]
