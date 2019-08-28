@@ -1,0 +1,59 @@
+<!--
+    How to load Google Map with createGoogleMaps function
+    the code is here: js/googlemaps.js
+    I also dislike these watermarker, so hopefully we can load Google Earth provider as soon as possiblly 
+-->
+<!DOCTYPE html>
+<head>
+    <title>Google Map</title>
+    <link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script src="./js/Sandcastle-header.js"></script>
+    <script type="text/javascript" src="./js/require.min.js" data-main="./js/main"></script>
+    <script type="text/javascript" src="./js/imageryproviders/googlemaps.js"></script>
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+        }
+        #toolbar{
+            margin: 5px;
+            padding: 2px 5px;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+        }
+    </style>
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<div id="toolbar">
+</div>
+<script>
+function onload(Cesium) {
+    var googlemap = createGoogleMapsByAPI(Cesium,{key:"AIzaSyBV9Ir9skml9c2i4iORl_Sa6OwspWtBwbk"});
+    var googlemap2 = createGoogleMapsByUrl(Cesium,{url:"http://mt1.google.cn/vt/lyrs=s&hl=zh-CN&x={x}&y={y}&z={z}"});
+    var viewer = new Cesium.Viewer('cesiumContainer', {
+        imageryProvider :new Cesium.SingleTileImageryProvider({
+            url : './images/globe.jpg'
+        }),
+        baseLayerPicker : false
+    });
+
+    var imageryLayers = viewer.imageryLayers;
+    Sandcastle.addDefaultToolbarMenu([{
+            text : 'Google Maps API',
+            onselect : function(){
+                var baseLayer = imageryLayers.get(0);
+                imageryLayers.addImageryProvider(googlemap,1);
+                imageryLayers.remove(baseLayer);
+            }
+        },{
+            text : 'Google Maps Url',
+            onselect : function(){
+                var baseLayer = imageryLayers.get(0);
+                imageryLayers.addImageryProvider(googlemap2,1);
+                imageryLayers.remove(baseLayer);
+            }
+        }]);
+};
+</script>
+</body>

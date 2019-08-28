@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mapbox Vector Tiles</title>
+    <link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="./js/Sandcastle-header.js"></script>
+    <script type="text/javascript" src="./js/require.min.js" data-main="./js/main"></script>
+    <style>
+      html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+      }
+      #toolbar{
+          margin: 5px;
+          padding: 2px 5px;
+          position: absolute;
+          left: 0px;
+          top: 0px;
+      }
+    </style>
+  </head>
+  <body>
+  <div id="cesiumContainer"></div>
+  <div id="toolbar"></div>
+    <script>
+      function onload(Cesium) {
+        var viewer = new Cesium.Viewer('cesiumContainer',{
+          baseLayerPicker : false
+        });
+
+        var imageryLayers = viewer.imageryLayers;
+
+        var mercatorLayer = new Cesium.TileCoordinatesImageryProvider({
+          tilingScheme: new Cesium.WebMercatorTilingScheme()
+        });
+        // default TilingScheme is GeographicTilingScheme
+        var wgsLayer = new Cesium.TileCoordinatesImageryProvider();
+
+        var mGridLayer = new Cesium.GridImageryProvider({
+          tilingScheme: new Cesium.WebMercatorTilingScheme()
+        });
+        // default TilingScheme is GeographicTilingScheme
+        var wGridLayer = new Cesium.GridImageryProvider();
+
+        Sandcastle.addDefaultToolbarMenu([
+        {
+            text : 'Web Mercator',
+            onselect : function(index){
+              var preLayer = imageryLayers.get(1);
+              imageryLayers.remove(preLayer);
+              imageryLayers.addImageryProvider(mercatorLayer,1);
+
+              preLayer = imageryLayers.get(2);
+              imageryLayers.remove(preLayer);
+              imageryLayers.addImageryProvider(mGridLayer,2);
+            }
+        },{
+            text : 'WGS84',
+            onselect : function(index){
+              var preLayer = imageryLayers.get(1);
+              imageryLayers.remove(preLayer);
+              imageryLayers.addImageryProvider(wgsLayer,1);
+
+              preLayer = imageryLayers.get(2);
+              imageryLayers.remove(preLayer);
+              imageryLayers.addImageryProvider(wGridLayer,2);                
+            }
+        }
+      ]);
+    };
+    </script>
+  </body>
+</html>

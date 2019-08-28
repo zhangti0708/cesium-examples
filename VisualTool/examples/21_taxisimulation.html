@@ -1,0 +1,246 @@
+<!--
+    Dynamic Point-Line
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <title>Taxi</title>
+    <link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script src="./js/jquery.min.js"></script>
+    <script type="text/javascript" src="./js/require.min.js" data-main="js/main"></script>
+    <script type="text/javascript" src="./data/traffic.js"></script>
+    <script type="text/javascript" src="./js/curve.js"></script>
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;background-color: #000000;
+        }
+    </style>
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<div id='loadingbar' class="spinner">
+    <div class="spinner-container container1">
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+        <div class="circle3"></div>
+        <div class="circle4"></div>
+    </div>
+    <div class="spinner-container container2">
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+        <div class="circle3"></div>
+        <div class="circle4"></div>
+    </div>
+    <div class="spinner-container container3">
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+        <div class="circle3"></div>
+        <div class="circle4"></div>
+    </div>
+</div>
+<script>
+    var center = [106.540545, 29.531714];
+    var height = 2*15;
+
+    function getCurveDynamicPointsAndLine(center, endPoints) {
+        if (center && (center instanceof Array) && endPoints && (endPoints instanceof Array)) {
+            var timeData = [];
+            var lineData = [];
+            endPoints.map(function (data) {
+                var coords = data.geometry && data.geometry.coordinates;
+                var toCenter = {lng: coords[0], lat: coords[1]};
+                var fromCenter = {lng: center[0], lat: center[1]};
+                var cv = getCurvePoints([fromCenter, toCenter]);
+                var pointArray = [];
+                for (var j = 0; j < cv.length; j++) {
+                    timeData.push({
+                        geometry: {
+                            type: 'Point',
+                            coordinates: cv[j]
+                        },
+                        time: j
+                    });
+                    pointArray.push(cv[j][0]);
+                    pointArray.push(cv[j][1]);
+                    pointArray.push(height);
+                }
+
+                lineData.push({
+                    geometry: {
+                        type: 'LineString',
+                        coordinates: pointArray
+                    }
+                });
+            });
+            return {point:timeData,line:lineData};
+        }
+    }
+
+    function onload(Cesium) {
+        clock = new Cesium.Clock();
+        clock.shouldAnimate = true;
+        vmClock = new Cesium.ClockViewModel(clock);
+
+
+        var viewer = new Cesium.Viewer('cesiumContainer',{
+            sceneModePicker:true,
+            navigation:false,
+            baseLayerPicker : false,
+            clockViewModel:vmClock,
+            imageryProvider:new Cesium.SingleTileImageryProvider({
+                url : './images/earthbump1k.jpg'
+            })
+        });
+        $('#loadingbar').remove();
+
+        viewer.scene.mode = Cesium.SceneMode.COLUMBUS_VIEW;
+
+        // 3d building
+        /////////////////////////////////
+        viewer.dataSources.add(Cesium.GeoJsonDataSource.load('./data/buildings.geojson')).then(function(datasource){
+            var entities = datasource.entities.values;
+            var factor = 0.8;
+            var colorHash = {
+                10 : new Cesium.Color(39/255*factor, 46/255*factor, 55/255*factor, 1.0),
+                15 : new Cesium.Color(67/255*factor,101/255*factor,145/255*factor, 1.0),
+                20 : new Cesium.Color(100/255*factor,140/255*factor,166/255*factor, 1.0),
+                25 : new Cesium.Color(139/255*factor,171/255*factor,183/255*factor, 1.0),
+                30 : new Cesium.Color(197/255*factor,176/255*factor,120/255*factor,1.0),
+                35 : new Cesium.Color(197/255*factor,141/255*factor,87/255*factor,1.0),
+                40 : new Cesium.Color(208/255*factor,100/255*factor,67/255*factor,1.0),
+                450000 : new Cesium.Color(185/255*factor,51/255*factor,44/255*factor,1.0)
+            };
+            var color;
+            for (var i = 0; i < entities.length; i++) {
+                var entity = entities[i];
+                var name = entity.name;
+                var height = parseInt(entity.properties.height.getValue());
+                var floor = parseInt(entity.properties.floor.getValue());
+                //console.log(height + '  --  ' + floor);
+                for(var key in colorHash){
+                    if(floor <= parseInt(key)){
+                        color = colorHash[key];
+                        break;
+                    }
+                }
+                entity.polygon.material = color;
+                entity.polygon.outline = false;
+                entity.polygon.extrudedHeight = floor*15;
+            }
+
+            viewer.scene.camera.setView({
+                //将经度、纬度、高度的坐标转换为笛卡尔坐标
+                destination : Cesium.Cartesian3.fromDegrees(106.5864, 29.4727,4709.442331966013),
+                orientation : {
+                    heading : 5.6326,
+                    pitch : -0.3964,
+                    roll : 0
+                }
+            });
+        });
+        ///////////////////////////////////
+
+        var pResult = getCurveDynamicPointsAndLine(center,trafficPoints);
+        var lineResult = pResult.line;
+        var pointResult = pResult.point;
+
+        ///////////////////////////////////////////////////
+        var curLineArray = [];
+        var linecolor = new Cesium.Color(32/255,228/255,243/255,0.8);
+        var l2 = new Cesium.Color(65/255,105/255,225/255, 0.8);
+        for (var i = 0; i < lineResult.length; ++i) {
+            curLineArray[i] = viewer.entities.add({
+                polyline : {
+                    positions : Cesium.Cartesian3.fromDegreesArrayHeights(lineResult[i].geometry.coordinates),
+                    width : 1,
+                    material : new Cesium.PolylineOutlineMaterialProperty({
+                        color : linecolor,
+                        outlineWidth : 0.1,
+                        outlineColor : l2
+                    }),
+                    depthFailMaterial: new Cesium.PolylineOutlineMaterialProperty({
+                        color : linecolor,
+                        outlineWidth : 0.1,
+                        outlineColor : l2
+                    })
+                }
+            });
+        }
+
+        var color = new Cesium.Color(243/255,242/255,249/255,0.8);
+        var endPointArray = [];
+        for (var i = 0; i < trafficPoints.length; ++i) {
+            endPointArray[i] = viewer.entities.add({
+                position : Cesium.Cartesian3.fromDegrees(trafficPoints[i].geometry.coordinates[0],trafficPoints[i].geometry.coordinates[1],height),
+                billboard :{
+                    image : './images/c2.png',
+                    width:8,
+                    height:8,
+                    color : color
+                }
+            });
+        }
+        ///////////////////////////////////////////////////   
+        var animationObj = {
+            stepsRange: {
+                start: 0,
+                end: 50
+            },
+            trails: 10,
+            duration: 85
+        };
+
+        var _range = animationObj.stepsRange.end - animationObj.stepsRange.start;
+
+        var isAvailable = function isAvailable(currentTime) {
+            if (!Cesium.defined(currentTime)) {
+                throw new Cesium.DeveloperError('time is required.');
+            }
+
+            var nMS = Cesium.JulianDate.toDate(currentTime).getTime()/animationObj.duration;
+            var time = (nMS%_range + animationObj.stepsRange.start);
+
+            var trails = trails || 10;
+            if (time && this.nameID > time - trails && this.nameID < time) {
+                return true;
+            } else {
+                return false;
+            }
+        };
+        ////////////////////////////////////////////////////////
+
+        var pointLineArray = [];
+        var entityArray = [];
+        //pointResult.length = 0;
+        for (var i = 0; i < pointResult.length; ++i) {            
+            var lon = pointResult[i].geometry.coordinates[0];
+            var lat = pointResult[i].geometry.coordinates[1];
+            entityArray[i] = viewer.entities.add({
+                position : Cesium.Cartesian3.fromDegrees(lon, lat,height),
+                nameID:pointResult[i].time,
+                billboard :{
+                    image : './images/c2.png',
+                    width:5,
+                    height:5,
+                    color : color
+                }
+            });
+            entityArray[i].isAvailable = isAvailable;
+        }
+
+        var colorC = new Cesium.Color(192/255,16/255,26/255, 0.8);
+        endPointArray[i] = viewer.entities.add({
+            position : Cesium.Cartesian3.fromDegrees(center[0],center[1],height),
+            point : {
+                show : true, // default
+                color : colorC,//Cesium.Color.RED, // default: WHITE
+                pixelSize : 24 // default: 1              
+            }
+        });
+    }
+</script>
+</body>
+</html>

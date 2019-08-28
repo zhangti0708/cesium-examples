@@ -1,0 +1,49 @@
+<!--
+    How to modify TimeLine Style: Skin and Visibility
+-->
+<!DOCTYPE html>
+<head>
+    <title>Animation</title>
+    <link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <link href="../Build/Cesium/Widgets/Animation/Animation.css" rel="stylesheet">
+    <link href="../Build/Cesium/Widgets/Animation/lighter.css" rel="stylesheet">
+    <script type="text/javascript" src="./js/require.min.js" data-main="./js/main"></script>
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="animationContainer" class="cesium-viewer-animationContainer" style="z-index:100">
+</div>
+<div id="cesiumContainer"></div>
+
+<script>
+    function onload(Cesium) {
+        var viewer = new Cesium.Viewer('cesiumContainer',{animation:false,timeline:false});
+
+        //var clock = new Cesium.Clock();
+        var clockViewModel = new Cesium.ClockViewModel(viewer.cesiumWidget.clock);
+        var viewModel = new Cesium.AnimationViewModel(clockViewModel);
+        var widget = new Cesium.Animation('animationContainer', viewModel);
+
+        document.body.className = 'cesium-lighter';
+        widget.applyThemeChanges();
+
+        viewer.animation = widget;
+
+        function tick() {
+            clock.tick();
+            Cesium.requestAnimationFrame(tick);
+        }
+        Cesium.requestAnimationFrame(tick);
+
+//        viewer.animation.container.style.visibility = 'hidden';
+//        viewer.animation.container.style.visibility = 'hidden';
+//
+//        viewer.timeline.container.style.visibility = 'visible';
+//        viewer.timeline.container.style.visibility = 'hidden';
+    }
+</script>
+</body>

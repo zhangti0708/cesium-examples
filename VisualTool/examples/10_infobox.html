@@ -1,0 +1,70 @@
+<!--
+    Custom InfoBox
+-->
+<!DOCTYPE html>
+<head>
+    <title>Info Box</title>
+    <link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script type="text/javascript" src="./js/require.min.js" data-main="./js/main"></script>
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<script>
+    function onload(Cesium) {
+        var viewer = new Cesium.Viewer('cesiumContainer');
+        viewer.infoBox.frame.setAttribute('sandbox', 'allow-same-origin allow-popups allow-forms allow-scripts');
+
+        viewer.cesiumWidget.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+
+        var canvas = document.createElement('canvas');
+        canvas.width = 400;
+        canvas.height = 400;
+
+        function createDescriptionCallback() {
+            var description;
+            return function(time, result) {
+                var image = canvas.toDataURL("image/png");
+                description = "ExamplesforCesium";
+                return description;
+            };
+        }
+
+        function MyObject(){
+
+        }
+
+        MyObject.prototype.myListener = function(dataCollection,dataValue) {
+            var entities;
+            var values = [];
+            var names = [];
+
+            entities = dataValue.entities.values;
+            var i=0;
+            for(i=0;i<entities.length;i++)
+            {
+                var name = entities[i].properties.name;
+                var nValue = entities[i].properties.Population;
+                values.push(nValue);
+                names.push(name);
+
+                entities[i].description = new Cesium.CallbackProperty(createDescriptionCallback(), true);
+            }
+        }
+
+        var myObjectInstance = new MyObject();
+        var evt = viewer.dataSources.dataSourceAdded;
+        evt.addEventListener(MyObject.prototype.myListener, myObjectInstance);
+
+        viewer.dataSources.add(Cesium.GeoJsonDataSource.load('./data/ne_10m_us_states.topojson', {
+            stroke: Cesium.Color.HOTPINK,
+            fill: Cesium.Color.PINK.withAlpha(0.5),
+            strokeWidth: 3
+        }));
+    }
+</script>
+</body>

@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mapbox Vector Tiles</title>
+    <link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="./js/openlayers4mvt/ol-debug.js"></script>
+    <script src="./js/openlayers4mvt/mapbox-streets-v6-style.js"></script>
+    <script type="text/javascript" src="./js/require.min.js" data-main="./js/main"></script>
+    <script type="text/javascript" src="./js/imageryproviders/mvt.js"></script>
+    <style>
+      .map {
+        background: #f8f4f0;
+        height:100px;
+        width:100px;
+      }
+    </style>
+  </head>
+  <body>
+        <div id="cesiumContainer"></div>
+    <script>
+      function onload(Cesium) {
+        var url = "https://a.tiles.mapbox.com/v4/mapbox.mapbox-streets-v6/{z}/{x}/{y}.vector.pbf?access_token={k}";
+        var key = 'pk.eyJ1IjoiYWhvY2V2YXIiLCJhIjoiRk1kMWZaSSJ9.E5BkluenyWQMsBLsuByrmg';
+        var mvtLayer = createMVTWithStyle(Cesium,ol,createMapboxStreetsV6Style,{url:url,key:key});
+        var viewer = new Cesium.Viewer('cesiumContainer', {
+            imageryProvider :mvtLayer,
+            baseLayerPicker : false
+        });
+        viewer.scene.globe.baseColor = new Cesium.Color(1.0,1.0,1.0,1.0);
+    };
+    </script>
+  </body>
+</html>

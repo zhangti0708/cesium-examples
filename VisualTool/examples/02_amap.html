@@ -1,0 +1,111 @@
+﻿<!--
+    How to load Google Map with createGoogleMaps function
+    the code is here: js/googlemaps.js
+    I also dislike these watermarker, so hopefully we can load Google Earth provider as soon as possiblly 
+-->
+<!DOCTYPE html>
+<head>
+    <title>AMap</title>
+    <link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script src="./js/Sandcastle-header.js"></script>
+    <script type="text/javascript" src="./js/require.min.js" data-main="./js/main"></script>
+    <script type="text/javascript" src="./js/imageryproviders/amap.js"></script>
+    <script src="./js/jquery.min.js"></script>
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+        }
+        #toolbar{
+            margin: 5px;
+            padding: 2px 5px;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+        }
+        b{
+            color: #A3660A;
+        }
+    </style>
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<div id="toolbar">
+<div id="selType">
+    <input type="checkbox">
+    <label class="check-icon"></label>
+    <b>Road Visible</b>
+</div>
+<div id="selType2">
+    <input type="checkbox">
+    <label class="check-icon"></label>
+    <b>Label Visible</b>
+</div>
+</div>
+<script>
+function onload(Cesium) {
+    function BEProxy(proxy) {
+        this.proxy = proxy;
+    }
+    BEProxy.prototype.getURL = function(resource) {
+        var prefix = this.proxy.indexOf('?') === -1 ? '?' : '';
+        return this.proxy + prefix + resource;
+    };
+    
+    var proxy = new BEProxy("http://localhost:8080/ExamplesforCesium.git/examples/Proxy.jsp");
+    
+    var amapSatelitte = createAMapByUrl(Cesium);
+    var amapVector = createAMapByUrl(Cesium,{url:"http://webst01.is.autonavi.com/appmaptile?style=7&x={x}&y={y}&z={z}"});
+    var amapRoad = createAMapByUrl(Cesium,{url:"http://wprd04.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scl=1&style=8&ltype=11",
+                                            /*proxy:proxy*/});
+    var amapLabel = createAMapByUrl(Cesium,{url:"http://wprd04.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scl=1&style=8&ltype=12",
+    /*proxy:proxy*/});
+
+    var viewer = new Cesium.Viewer('cesiumContainer', {
+        imageryProvider :amapSatelitte,
+        baseLayerPicker : false
+    });
+
+    var imageryLayers = viewer.imageryLayers;
+    Sandcastle.addDefaultToolbarMenu([
+        {
+            text : 'Satelitte',
+            onselect : function(index){
+                var baseLayer = imageryLayers.get(0);
+                imageryLayers.addImageryProvider(amapSatelitte,1);
+                imageryLayers.remove(baseLayer);
+            }
+        },{
+            text : 'Vector',
+            onselect : function(index){
+                var baseLayer = imageryLayers.get(0);
+                imageryLayers.addImageryProvider(amapVector,1);
+                imageryLayers.remove(baseLayer);
+            }
+        }
+    ]);
+
+    var imageryRoad;
+    var isChecked = false;
+    $('#selType').click(function(evt){
+        isChecked = !isChecked;
+        if(isChecked){
+            imageryRoad = imageryLayers.addImageryProvider(amapRoad,2);
+        }
+        else{
+            imageryLayers.remove(imageryRoad);
+        }
+    });
+    var imageryLabel;
+    var isLabelChecked = false;
+    $('#selType2').click(function(evt){
+        isLabelChecked = !isLabelChecked;
+        if(isLabelChecked){
+            imageryLabel = imageryLayers.addImageryProvider(amapLabel,3);
+        }
+        else{
+            imageryLayers.remove(imageryLabel);
+        }
+    });
+};
+</script>
+</body>
