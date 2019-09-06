@@ -1,0 +1,143 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>三维可视化</title>
+<!-- css  -->
+<link href="../bigdataUI/css/style.css"  rel="stylesheet" type="text/css" media="all" />
+<link rel="stylesheet" href="../src/Cesium/Widgets/widgets.css">
+<link rel="stylesheet" href="../common/plugin/layui/css/layui.css">
+<link rel="stylesheet" href="../src/font-awesome/css/font-awesome.css">
+<style>
+html, body, #cesiumContainer {
+    width: 100%; 
+    height: 100%; 
+    margin: 0; 
+    padding: 0; 
+    overflow: hidden;
+}
+.bnt{
+	height: 8%;
+}
+.mrbox_top_right{
+	position: absolute;
+	top:10%;
+	right: 1px;
+	width: 15%;
+	height: 91%;
+	padding-right:0.1%;
+}
+#div_bottom_1{
+	width: 50%;
+}
+#div_bottom_2{
+	float:right;
+	width: 15%;
+}
+.rbottom_box3{
+	width: 100%;
+}
+.rbottom_box1{
+	float:none;
+	width: 100%;
+	height: 85%;
+}
+.rbottom_box2{
+	width: 30%;
+}
+.puleftboxtbott{
+	position: absolute;
+	bottom: 1px;
+	left:0px;
+	width: 100%;
+	height: 10%;
+}
+</style>
+ <!-- js  -->
+ <script type="text/javascript" src="../src/Cesium/Cesium.js"></script>
+ <script type="text/javascript" src="../src/jquery/jquery.js"></script>
+ <script type="text/javascript" src="../common/plugin/layui/layui.all.js"></script>
+ <script type="text/javascript" src="../src/bootstrap/js/bootstrap.js"></script>
+ <script type="text/javascript" src="../common/3d/js/Cesium_init.js"></script>
+ <script type="text/javascript" src="../common/plugin/vue.min.js"></script>
+<body>
+<div class="bnt">
+  <div class="topbnt_left fl">
+   <ul>
+	   <li  class="active"><a href="#">基地1</a></li>
+      <li><a href="#">基地2</a></li>
+      <li><a href="#">基地3</a></li>
+      <li><a href="#">基地4</a></li>
+   </ul>
+  </div>
+  <h1 class="tith1 fl">测控管理系统</h1>
+  <div class=" fr topbnt_right">
+    <ul>
+       <li><a href="#">返回</a></li>
+       <li><a href="#">基地7</a></li>
+       <li><a href="#">基地6</a></li>
+       <li><a href="#">基地5</a></li>
+    </ul>
+   </ul>
+  </div>
+</div>
+<div id="cesiumContainer"></div>
+
+<div class="mrbox_top_right">
+		<div class="hdrightboxtop"><h2 class="tith2">管理</h2><br>
+		  <div class="left2_table hdleft2_table">
+				<div class="mrbox_bottom">
+					<div class="rbottom_box1"><h2 class="tith2">管理</h2>
+					<div id="prbottom_box2" class="prbottom_box1cont"></div></div>
+					<div class="rbottom_box1"><h2 class="tith2">管理</h2>
+					<div id="pleftbox2midd" class="prbottom_box1cont" ></div></div>
+					<div class="rbottom_box1"><h2 class="tith2 pt2">管理</h2>
+					<div id="prbottom_box3" class="prbottom_box1cont"></div></div>
+					<div class="rbottom_box1"><h2 class="tith2 pt2">查询</h2>
+					<div id="prbottom_box3" class="prbottom_box1cont"></div></div>
+				</div>
+		  </div>
+	  </div>
+</div>
+
+<div class="puleftboxtbott">
+		<div class="box pbox">
+			<div class="left2_table hdleft2_table">
+				<div class="mrbox_bottom" id="div_bottom_1">
+					<div class="rbottom_box2"><h2 class="tith2">工具1</h2>
+					<div id="prbottom_box2" class="prbottom_box1cont">
+
+            <span>测试</span>
+          </div></div>
+					<div class="rbottom_box2"><h2 class="tith2">工具2</h2>
+					<div id="pleftbox2midd" class="prbottom_box1cont" ></div></div>
+					<div class="rbottom_box2"><h2 class="tith2 pt2">工具3</h2>
+					<div id="prbottom_box3" class="prbottom_box1cont"></div></div>
+				</div>
+				<div class="mrbox_bottom" id="div_bottom_2">
+					<div class="rbottom_box3"><h2 class="tith2">时间</h2>
+					<div id="prbottom_box2" class="prbottom_box1cont"></div></div>
+				</div>
+			</div>
+		</div>
+	</div>
+<script type="text/javascript">
+	//地图资源
+  var GoogleMap = ImageryProviderWebExtendTool.createGoogleMapsByUrl(Cesium, { url: "http://mt1.google.cn/vt/lyrs=s&hl=zh-CN&x={x}&y={y}&z={z}" });
+				var viewer = new Cesium.Viewer('cesiumContainer', {
+			imageryProvider: GoogleMap,
+			shouldAnimate : false,
+			selectionIndicator: false,
+			baseLayerPicker:false,
+			homeButton:false,
+			animation: false,
+			timeline:false,
+			geocoder: false,
+			sceneModePicker: false,
+			navigationHelpButton: false,
+			infoBox: true,
+			fullscreenButton: false
+		});
+</script>
+
+
+</body>
+</html>
