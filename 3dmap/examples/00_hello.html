@@ -1,0 +1,32 @@
+<!--This simple demo shows the first step about how to create a basic globe with Cesium.js-->
+<!--Have fun for the first date with Cesium-->
+<!--BTW, in Cesium, the default imageryprovider is BingMap, but in most situations especially in China, you'd better use your own key for this application-->
+<!DOCTYPE html>
+<head>
+    <title>Hello World</title>
+    <script src="../Build/Cesium/Cesium.js"></script>
+    <link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<script>
+    var viewer = new Cesium.Viewer('cesiumContainer',{
+        animation:false,
+        baseLayerPicker:false,
+        fullscreenButton:false,
+        vrButton:false,
+        geocoder:false,
+        homeButton:false,
+        infoBox:false,
+        sceneModePicker:false,
+        timeline:false,
+        navigationHelpButton:false,
+        navigationInstructionsInitiallyVisible:false,
+    });
+</script>
+</body>

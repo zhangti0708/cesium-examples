@@ -1,0 +1,108 @@
+<!--
+    Berkeley Earth AQI Tiles Server
+    Unfortunately, because of referer strict, we need set proxy, but github could not support it
+    So, you can download this project in your local environment and have a look at it
+-->
+<!DOCTYPE html>
+<head>
+    <title>Berkeley Earth</title>
+    <link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script type="text/javascript" src="./js/require.min.js" data-main="./js/main"></script>
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<script>
+    function printDate() {
+        var temp = new Date();
+        var dateStr = padStr(temp.getUTCFullYear()) +
+                    padStr(1 + temp.getUTCMonth()) +
+                    padStr(temp.getUTCDate()) +
+                    padStr(temp.getUTCHours()-1);
+        return dateStr;
+    }
+
+    function padStr(i) {
+        return (i < 10) ? "0" + i : "" + i;
+    }
+
+    function onload(Cesium) {
+        function createAQIBerkeleyEarthProvider(options) {
+            var dataSourceRoot = "http://berkeleyearth.lbl.gov/air-quality/maps/";
+
+            var tilingScheme = new Cesium.WebMercatorTilingScheme();
+
+            var tileWidth = 256;
+            var tileHeight = 256;
+
+            var minimumLevel = 0;
+            var maximumLevel = options.maximumLevel;
+
+            var rectangle = tilingScheme.rectangle;
+
+
+            var swTile = tilingScheme.positionToTileXY(Cesium.Rectangle.southwest(rectangle), minimumLevel);
+            var neTile = tilingScheme.positionToTileXY(Cesium.Rectangle.northeast(rectangle), minimumLevel);
+            var tileCount = (Math.abs(neTile.x - swTile.x) + 1) * (Math.abs(neTile.y - swTile.y) + 1);
+            if (tileCount > 4) {
+                throw new Cesium.DeveloperError('The rectangle and minimumLevel indicate that there are ' + tileCount + ' tiles at the minimum level. Imagery providers with more than four tiles at the minimum level are not supported.');
+            }
+
+            var credit = "Air Quality Real-time Map From Bekeley Earth";
+            if (typeof credit === 'string') {
+                credit = new Cesium.Credit(credit);
+            }
+            
+            var templateUrl;
+            var current = printDate();
+
+            if(options.timeMode == 'h'){
+               templateUrl = dataSourceRoot + 'hour/' + current.substring(0,6) + "/" + current + '/tiles/health/' + "{z}/{x}/{y}.png";
+            }
+			
+			//templateUrl = "http://localhost:8080/examples/examples/Proxy.jsp?url=" +encodeURIComponent(templateUrl);
+            
+
+            return new Cesium.UrlTemplateImageryProvider({
+                url: templateUrl,
+                proxy: options.proxy,
+                credit: credit,
+                tilingScheme: tilingScheme,
+                tileWidth: tileWidth,
+                tileHeight: tileHeight,
+                minimumLevel: minimumLevel,
+                maximumLevel: maximumLevel,
+                rectangle: rectangle
+            });
+        }
+
+        var viewer = new Cesium.Viewer('cesiumContainer', {
+			skyBox : false,
+			skyAtmosphere : false,
+			baseLayerPicker : false,
+			imageryProvider :new Cesium.SingleTileImageryProvider({
+                url : './images/globe.jpg'
+            })
+		});
+		
+		function BEProxy(proxy) {
+			this.proxy = proxy;
+		}
+		BEProxy.prototype.getURL = function(resource) {
+			var prefix = this.proxy.indexOf('?') === -1 ? '?' : '';
+			return this.proxy + prefix + resource;
+		};
+		
+		var proxy = new BEProxy("http://localhost:8080/examples/examples/Proxy.jsp");
+		
+		var aqiProvider = createAQIBerkeleyEarthProvider({timeMode:'h',proxy:proxy});
+        var imageryLayers = viewer.imageryLayers;
+
+        imageryLayers.addImageryProvider(aqiProvider);
+    };
+</script>
+</body>

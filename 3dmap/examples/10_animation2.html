@@ -1,0 +1,62 @@
+<!--
+    How to attach events with TimeLine Widget
+-->
+<!DOCTYPE html>
+<head>
+    <title>Animation</title>
+    <link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <link href="../Build/Cesium/Widgets/Animation/Animation.css" rel="stylesheet">
+    <link href="../Build/Cesium/Widgets/Animation/lighter.css" rel="stylesheet">
+    <script type="text/javascript" src="./js/require.min.js" data-main="./js/main"></script>
+    <script type="text/javascript" src="./js/require.min.js" data-main="./js/main"></script>
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="animationContainer" class="cesium-viewer-animationContainer" style="z-index:100">
+</div>
+<div id="cesiumContainer"></div>
+
+<script>
+    function onload(Cesium) {
+        var viewer = new Cesium.Viewer('cesiumContainer',{animation:true,timeline:true});
+
+        var d = new Date();
+        var hour = 0 - d.getTimezoneOffset();
+        viewer.animation.viewModel.timeFormatter = function(date, viewModel) {
+            var dateZone8 = Cesium.JulianDate.addMinutes(date,hour,new Cesium.JulianDate());
+            var gregorianDate = Cesium.JulianDate.toGregorianDate(dateZone8);
+            var millisecond = Math.round(gregorianDate.millisecond);
+            if (Math.abs(viewModel._clockViewModel.multiplier) < 1) {
+                return Cesium.sprintf("%02d:%02d:%02d.%03d", gregorianDate.hour, gregorianDate.minute, gregorianDate.second, millisecond);
+            }
+            return Cesium.sprintf("%02d:%02d:%02d GMT+8", gregorianDate.hour, gregorianDate.minute, gregorianDate.second);
+        };
+
+        var clock = viewer.cesiumWidget.clock;
+        var timeline = viewer.timeline;
+
+        var startTime = clock.startTime;
+        var stopTime = clock.stopTime;
+
+        function tick() {
+            var currentTime = Cesium.JulianDate.clone(clock.currentTime);
+
+            if(Cesium.JulianDate.greaterThan(currentTime, stopTime))
+            {
+                startTime = Cesium.JulianDate.addDays(startTime,1.0,startTime);
+                stopTime = Cesium.JulianDate.addDays(stopTime,1.0,stopTime);
+
+                timeline.zoomTo(startTime,stopTime);
+            }
+        }
+
+        var helper = new Cesium.EventHelper();
+        helper.add(clock.onTick,tick);
+
+    }
+</script>
+</body>

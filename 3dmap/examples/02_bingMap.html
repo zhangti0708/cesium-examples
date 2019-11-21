@@ -1,0 +1,78 @@
+<!--
+    How to load ArcGis Server with ArcGisMapServerImageryProvider
+    BTW, in Cesium, the default imageryprovider is BingMap, but in most situations especially in China, you'd better use your own key for this application
+-->
+<!DOCTYPE html>
+<head>
+    <title>BingMap</title>
+    <link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script src="./js/Sandcastle-header.js"></script>
+    <script type="text/javascript" src="./js/require.min.js" data-main="./js/main"></script>
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+        }
+        #toolbar{
+            margin: 5px;
+            padding: 2px 5px;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+        }
+    </style>
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<div id="toolbar"></div>
+<script>
+    var bingProviders = [];
+    var bingProviderMenu = [];
+    function onload(Cesium) {
+        var bingStyle = [Cesium.BingMapsStyle.AERIAL,
+                        Cesium.BingMapsStyle.AERIAL_WITH_LABELS,
+                        Cesium.BingMapsStyle.CANVAS_DARK,
+                        Cesium.BingMapsStyle.CANVAS_GRAY,
+                        Cesium.BingMapsStyle.CANVAS_LIGHT,
+                        Cesium.BingMapsStyle.COLLINS_BART,
+                        Cesium.BingMapsStyle.ORDNANCE_SURVEY,
+                        Cesium.BingMapsStyle.ROAD];
+
+        (function(){
+            for(var i=0; i<bingStyle.length;i++){
+                var imageryProvider = new Cesium.BingMapsImageryProvider({
+                    url : 'https://dev.virtualearth.net',
+                    mapStyle : bingStyle[i],
+                    culture:"zh-Hans",
+                    key:"AlgsUaY9R3p9MHmp-GN-o4j9HsdPrxboqvpaWwL5Da5vwQv7YkdC426vW1s6Lxrk" // apply your own key from bing map
+                });
+                bingProviders.push(imageryProvider);
+            }
+        }());
+
+        (function(){
+            for(var i=0; i<bingStyle.length;i++){
+                var obj = {
+                            text : bingStyle[i],
+                            onselect : function(index){
+                                return function(){
+                                    var baseLayer = imageryLayers.get(0);
+                                    imageryLayers.addImageryProvider(bingProviders[index],1);
+                                    imageryLayers.remove(baseLayer);
+                                }
+                            }(i)
+                          };
+                bingProviderMenu.push(obj);
+            }           
+        }());
+
+        var viewer = new Cesium.Viewer('cesiumContainer', {
+            imageryProvider :bingProviders[0],
+            baseLayerPicker : false
+        });
+
+        var imageryLayers = viewer.imageryLayers;
+        Sandcastle.addDefaultToolbarMenu(bingProviderMenu);
+
+    };
+</script>
+</body>

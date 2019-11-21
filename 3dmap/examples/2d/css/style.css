@@ -1,0 +1,211 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+body,
+input,
+textarea {
+    font-family: "PingFang SC", "Helvetica Neue", "Hiragino Sans GB", "Segoe UI", "Microsoft YaHei", "微软雅黑", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+    color: #323A45;
+}
+
+@charset "utf-8";
+blockquote,
+body,
+dd,
+div,
+dl,
+dt,
+fieldset,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+input,
+li,
+ol,
+p,
+pre,
+td,
+textarea,
+th,
+ul {
+    padding: 0;
+    margin: 0
+}
+
+ol,
+ul {
+    list-style: none
+}
+
+a {
+    color: #323A45;
+    text-decoration: none
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+
+/*顶部菜单*/
+
+#top-menu {
+    position: fixed;
+    height: 64px;
+    width: 100%;
+    border-bottom: 1px solid #DDD;
+    background-color: #FFF;
+    z-index: 100
+}
+
+#top-menu .logo {
+    float: left
+}
+
+#top-menu .logo img {
+    height: 50px;
+    margin: 7px 0
+}
+
+#top-menu li,
+#top-menu ul {
+    list-style: none
+}
+
+#top-menu ul.nav {
+    float: left;
+    height: 64px;
+    line-height: 64px;
+    margin-left: 40px
+}
+
+#top-menu ul.nav>li {
+    float: left;
+    margin: 0 15px;
+    position: relative
+}
+
+#top-menu ul.nav>li.dropdown {
+    position: relative
+}
+
+#top-menu ul.nav>li.dropdown:hover ul.menu {
+    display: inline-block;
+    opacity: 1;
+    transform: translateY(0)
+}
+
+#top-menu ul.nav>li.dropdown ul.menu {
+    display: none;
+    position: absolute;
+    width: 105px;
+    border: 1px solid #DDD;
+    line-height: normal;
+    top: 50px;
+    left: 50%;
+    margin-left: -50px;
+    background: #FFF;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px
+}
+
+#top-menu ul.nav>li.dropdown ul.menu:before {
+    content: '';
+    bottom: auto;
+    right: auto;
+    top: -5px;
+    left: 43px;
+    position: absolute;
+    width: .6em;
+    height: .6em;
+    -webkit-transform: rotate(135deg);
+    -moz-transform: rotate(135deg);
+    -ms-transform: rotate(135deg);
+    transform: rotate(135deg);
+    z-index: 2;
+    -webkit-transition: background .1s linear;
+    -moz-transition: background .1s linear;
+    transition: background .1s linear;
+    background-color: #FFF;
+    border-left: 1px solid #DDD;
+    border-bottom: 1px solid #DDD
+}
+
+#top-menu ul.nav>li.dropdown ul.menu>li {
+    width: 100%;
+    font-size: 14px;
+    font-weight: 400;
+    box-sizing: border-box;
+    line-height: 25px
+}
+
+#top-menu ul.nav>li.dropdown ul.menu>li:hover {
+    background: rgba(0, 0, 0, .03)
+}
+
+#top-menu ul.nav>li.dropdown ul.menu>li:first-child {
+    padding-top: 3px
+}
+
+#top-menu ul.nav>li.dropdown ul.menu>li a {
+    display: block;
+    padding: 2px 12px
+}
+
+#top-menu ul.nav>li.dropdown ul.menu>li .icon {
+    font-size: .5rem;
+    display: inline-block;
+    width: 19px;
+    text-align: center
+}
+
+#top-menu ul.nav>li.dropdown ul.menu.short {
+    width: 55px;
+    margin-left: -30px
+}
+
+#top-menu ul.nav>li.dropdown ul.menu.short:before {
+    content: '';
+    bottom: auto;
+    right: auto;
+    top: -5px;
+    left: 25px;
+    position: absolute;
+    width: .6em;
+    height: .6em;
+    -webkit-transform: rotate(135deg);
+    -moz-transform: rotate(135deg);
+    -ms-transform: rotate(135deg);
+    transform: rotate(135deg);
+    z-index: 2;
+    -webkit-transition: background .1s linear;
+    -moz-transition: background .1s linear;
+    transition: background .1s linear;
+    background-color: #FFF;
+    border-left: 1px solid #DDD;
+    border-bottom: 1px solid #DDD
+}
+
+.container {
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.container a {
+    text-decoration: none;
+}

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>加载geojson数据模型</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script type="text/javascript" src="../Build/Cesium/Cesium.js"></script>
+    <script type="text/javascript" src="../common/js/Cesium_init.js"></script>
+    <style>
+            html,body
+            {
+                width:100%;
+                height:100%;
+                padding:0;
+                margin:0
+            }
+        </style>
+</head>
+<body>
+    <div id = "cesiumContainer" style="width:100%;height:100%;">
+    </div>
+    <div id="fly_operator_container" style="position:absolute;z-index:9;top:10px;left:10px;">
+        <button onclick="initDefaultStyle()">加载数据</button>
+        <span style="color:white">拾取边框颜色：</span><input id = "border_color" type="color" onchange="borderColorSelect()"></input>
+        <span style="color:white">拾取填充颜色：</span><input id = "fill_color" type="color" onchange="fillColorSelect()"></input>
+        <span style="color:white">填充透明度：</span><input type="range" min="0" max="1" value="1" step="0.05" id="fill_alpha" onchange="fillAlphaSelect()"></input>
+        <span style="color:white;display: none">边框粗细：</span><input style="display:none" type="number" min="0" max="15" value="10" id="border_size" onchange="borderSize()"></input>
+        <button onclick="initClasses()">分类渲染</button>
+        <button onclick="setPolygonHeight()">设置单个数据高度</button>
+        <button onclick="setPolygonColor()">设置单个数据颜色</button>
+        <button onclick="setPolygonAlpha()">设置单个数据透明度</button>
+        <button onclick="setAllPolygonHeight()">随机设置所有图形高度</button>
+        <input type="checkbox" id="setPolygonShow" onchange="setPolygonShow()" checked /><span style="margin-right:10px;color:white">设置单个数据是否显示</span> <br>
+    </div>
+    <script>
+        //cesium_container 对应容器div 的ID
+      	//地图资源
+	var GoogleMap = ImageryProviderWebExtendTool.createGoogleMapsByUrl(Cesium, { url: "http://mt1.google.cn/vt/lyrs=s&hl=zh-CN&x={x}&y={y}&z={z}" });
+			var viewer = new Cesium.Viewer('cesiumContainer', {
+			imageryProvider: GoogleMap,
+			shouldAnimate : false,
+			selectionIndicator: false,
+			baseLayerPicker:false,
+			homeButton:false,
+			animation: true,
+			timeline:true,
+			geocoder: false,
+			sceneModePicker: false,
+			navigationHelpButton: false,
+			infoBox: false,
+			fullscreenButton: false
+        });
+       
+        /**
+         * 加载默认样式
+         */
+        function initDefaultStyle()
+        {
+            reset();
+            var promise = viewer.dataSources.add(Cesium.GeoJsonDataSource.load('../../3dmap/common/data/china.json'));
+            promise.then(function(dataSource) {
+                showName();
+            }).otherwise(function(error){
+                window.alert(error);
+            });
+        }
+
+        /**
+         * 修改边框颜色
+         **/
+        function borderColorSelect()
+        {
+            reset();
+            var promise =viewer.dataSources.add(Cesium.GeoJsonDataSource.load('../../3dmap/common/data/china.json', {
+                stroke: Cesium.Color.fromCssColorString(document.getElementById("border_color").value),
+                fill: Cesium.Color.fromCssColorString(document.getElementById("fill_color").value).withAlpha(Number(document.getElementById("fill_alpha").value)),
+                strokeWidth: Number(document.getElementById("border_size").value),
+            }));
+            promise.then(function(dataSource) {
+                showName();
+            }).otherwise(function(error){
+                window.alert(error);
+            });
+        }
+
+        /**
+         * 修改填充颜色
+         **/
+        function fillColorSelect()
+        {
+            reset();
+            var promise =viewer.dataSources.add(Cesium.GeoJsonDataSource.load('../../3dmap/common/data/china.json', {
+                stroke: Cesium.Color.fromCssColorString(document.getElementById("border_color").value),
+                fill: Cesium.Color.fromCssColorString(document.getElementById("fill_color").value).withAlpha(Number(document.getElementById("fill_alpha").value)),
+                strokeWidth: Number(document.getElementById("border_size").value)
+            }));
+            promise.then(function(dataSource) {
+                showName();
+            }).otherwise(function(error){
+                window.alert(error);
+            });
+        }
+
+        /**
+         * 修改填充透明度
+         **/
+         function fillAlphaSelect()
+        {
+            reset();
+            var promise =viewer.dataSources.add(Cesium.GeoJsonDataSource.load('../../3dmap/common/data/china.json', {
+                stroke: Cesium.Color.fromCssColorString(document.getElementById("border_color").value),
+                fill: Cesium.Color.fromCssColorString(document.getElementById("fill_color").value).withAlpha(Number(document.getElementById("fill_alpha").value)),
+                strokeWidth: Number(document.getElementById("border_size").value),
+            }));
+            promise.then(function(dataSource) {
+                showName();
+            }).otherwise(function(error){
+                window.alert(error);
+            });
+        }
+
+
+        /**
+         * 修改边框粗细
+         **/
+        function borderSize()
+        {
+            reset();
+            var promise =viewer.dataSources.add(Cesium.GeoJsonDataSource.load('../../3dmap/common/data/china.json', {
+                stroke: Cesium.Color.fromCssColorString(document.getElementById("border_color").value),
+                fill: Cesium.Color.fromCssColorString(document.getElementById("fill_color").value).withAlpha(Number(document.getElementById("fill_alpha").value)),
+                strokeWidth: Number(document.getElementById("border_size").value)
+            }));
+            promise.then(function(dataSource) {
+                showName();
+            }).otherwise(function(error){
+                window.alert(error);
+            });
+        }
+
+        /**
+        * 分类渲染
+        **/
+        function initClasses()
+        {
+            reset();
+            Cesium.Math.setRandomNumberSeed(0);
+            var promise = viewer.dataSources.add(Cesium.GeoJsonDataSource.load('../../3dmap/common/data/china.json'));
+            promise.then(function(dataSource) {
+                var entities = dataSource.entities.values;
+                var colorHash = {};
+                for (var i = 0; i < entities.length; i++)
+                {
+                    var entity = entities[i];
+                    entity.polygon.material = Cesium.Color.fromRandom({alpha : 0.7 });
+                    entity.polygon.outline = false;
+                    // label = {
+                    //     text: entity.name,
+                    //     font : '12px Helvetica',
+                    //     fillColor : Cesium.Color.WHITE,
+                    //     outlineColor : Cesium.Color.BLACK,
+                    //     outlineWidth : 4,
+
+                    //     style : Cesium.LabelStyle.FILL_AND_OUTLINE,
+                    //     verticalOrigin : Cesium.VerticalOrigin.BOTTOM,
+                    //     pixelOffset : new Cesium.Cartesian2(0, -9)
+                    // };
+                    // entity.label = label;
+                }
+                showName();
+            }).otherwise(function(error){
+                window.alert(error);
+            });
+        }
+
+        /**
+         * 设置单个图形高度
+         */
+        function setPolygonHeight()
+        {
+            if(viewer.dataSources.length>0)
+                viewer.dataSources.get(0).entities.values[0].polygon.extrudedHeight= 100000;
+        }
+
+        /**
+         * 设置单个图形颜色
+         */
+         function setPolygonColor()
+        {
+            if(viewer.dataSources.length>0)
+                viewer.dataSources.get(0).entities.values[0].polygon.material= Cesium.Color.fromRandom({alpha : 1.0});
+        }
+
+        /**
+         * 设置单个图形透明度
+         */
+         function setPolygonAlpha()
+        {
+            if(viewer.dataSources.length>0)
+            {
+                let color = viewer.dataSources.get(0).entities.values[0].polygon.material.color.getValue();
+                color.alpha =  Math.random();
+                viewer.dataSources.get(0).entities.values[0].polygon.material.color.setValue(color);
+            }
+        }
+
+        /**
+         * 随机设置所有图形高度
+         */
+         function setAllPolygonHeight()
+        {
+            if(viewer.dataSources.length>0)
+            {
+                for(let i = 0;i<viewer.dataSources.get(0).entities.values.length;i++)
+                {
+                    viewer.dataSources.get(0).entities.values[i].polygon.extrudedHeight= 500000*Math.random();
+                }
+            }
+        }
+
+        /**
+         * 设置图形是否显示
+         **/
+         function setPolygonShow()
+        {
+            let select = document.getElementById("setPolygonShow");
+            if(viewer.dataSources.length>0)
+                viewer.dataSources.get(0).entities.values[0].show = select.checked?true:false;
+        }
+
+        /**
+         * 显示名称
+         **/
+        function showName()
+        {
+            if(viewer.dataSources.length>0)
+            {
+                let entities = viewer.dataSources.get(0).entities.values;
+                for(let i = 0;i<entities.length;i++)
+                {
+                    let entity = entities[i];
+                    let location = entity.properties.cp.getValue();
+                    viewer.entities.add({
+                        position : Cesium.Cartesian3.fromDegrees(location[0],location[1]),
+                        label : {
+                            text : entity.name
+                        }
+                    });
+                }
+            }
+        }
+
+        /**
+         * 重置数据源
+         **/
+        function reset()
+        {
+            viewer.dataSources.removeAll();
+            viewer.entities.removeAll();
+            viewer.camera.lookAt(Cesium.Cartesian3.fromDegrees(116.2345 , 39.34555), new Cesium.Cartesian3(0.0, -4790000.0, 10000.0));
+        }
+        
+    </script>
+</body>
+</html>

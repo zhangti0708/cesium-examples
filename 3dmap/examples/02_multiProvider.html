@@ -1,0 +1,49 @@
+<!--
+	Add two layers and set its style
+-->
+<!DOCTYPE html>
+<head>
+    <title>MultiProvider</title>
+    <link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script type="text/javascript" src="./js/require.min.js" data-main="./js/main"></script>
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<script>
+    function onload(Cesium) {
+        var viewer = new Cesium.Viewer('cesiumContainer', {
+            imageryProvider : new Cesium.WebMapTileServiceImageryProvider({
+                url : 'https://t0.tianditu.com/img_c/wmts?service=WMTS&version=1.0.0&request=GetTile&tilematrix={TileMatrix}&layer=img&style={style}&tilerow={TileRow}&tilecol={TileCol}&tilematrixset={TileMatrixSet}&format=tiles',
+                layer : 'img',
+                style : 'default',
+                format : 'tiles',
+                tileMatrixSetID : 'c',
+                credit : new Cesium.Credit('天地图全球影像服务'),
+                subdomains : ['t0','t1','t2','t3','t4','t5','t6','t7'],
+                maximumLevel : 15,
+                tilingScheme : new Cesium.GeographicTilingScheme(),
+                tileMatrixLabels:['1','2','3','4','5','6','7']
+            }),
+            baseLayerPicker : false
+        });
+
+        var esriLayer =  new Cesium.ArcGisMapServerImageryProvider({
+            url : 'http://atlasmaps.esri.com/arcgis/rest/services/Esri/USA_Population_Density/MapServer',
+            enablePickFeatures : false
+        });
+
+        var imageryLayers = viewer.imageryLayers;
+        esriLayer = imageryLayers.addImageryProvider(esriLayer);
+        imageryLayers.raiseToTop(esriLayer);
+        esriLayer.alpha = 0.5;
+        esriLayer.brightness = 2.0;
+
+        viewer.cesiumWidget.creditContainer.style.display= "none";
+    };
+</script>
+</body>

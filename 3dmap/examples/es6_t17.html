@@ -1,0 +1,56 @@
+<!--
+ * @Descripttion: 
+ * @version: 1.0
+ * @Author: zhangti
+ * @Date: 2019-11-20 17:51:52
+ * @LastEditors: sueRimn
+ * @LastEditTime: 2019-11-21 10:44:57
+ -->
+<!--
+	Format:https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer/tile/{z}/{y}/{x}
+	At first, I use HttpDebugger find this server, because ArcGIS Earth use this elevation3d server
+	Although it is height map form, in China, it is not easy to visit STK Terrain, it is also an appropriate solution.
+	Then I watched the tile content and the header is "CntZImage" which is the arcgis/lerc compression
+	Eventually, I create the ArcGisImageServerTerrainProvider class, so we can load thise terrain server easily, and you can download this file in Source/Core freely.
+	Note: ArcGIS HeightMap Terrain Server is WebMercatorTilingScheme.
+	There is a bug but I could not fix it without modifying the source code. For example, in level 13, I found some tiles have no height data,
+	the data is always 0, you can still request this tile. So, the state is TerrainState.RECEIVED
+-->
+<!DOCTYPE html>
+<head>
+    <title>风场洋流</title>
+	<link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+	<script type="text/javascript" src="../Build/Cesium/Cesium.js"></script>
+	<script type="text/javascript" src="../Build/Cesium/CesiumBuild.js"></script>
+	<script type="text/javascript" src="js/jquery.min.3.2.1.js"></script>
+	<script type="text/javascript" src="../libs/netcdfjs.js"></script>
+	<script type="text/javascript" src="../libs/spector.bundle.js"></script>
+	<script type="text/javascript" src="../libs/dat.gui.min.js"></script>
+	<style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+		}
+		.btn{
+			position: absolute;
+			top: 5px;
+			left: 5px;
+			padding: 2px;
+		}
+    </style>
+</head>
+<body>
+<!--
+	æ��è¿°ï¼šcesiumç�ƒ
+-->
+<div id="cesiumContainer"></div>			
+<script type="module">
+	import {CV} from '../package/Core/CV.js';
+	let earth = new CV.Earth("cesiumContainer",{ 
+		imageryProvider:CV.TAG.BASELAYER.GOOGLEIMAGERY(),
+		skyBox : CV.TAG.SKYBOX.customStyle(),
+		infoBox: true
+	})
+	let Wind3D = new CV.Wind3D({"viewer":earth.core,data:"data/3DWind/data/demo.nc"});
+</script>
+	
+</body>

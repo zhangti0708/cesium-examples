@@ -1,0 +1,80 @@
+<!--
+	How to load mapbox server with MapboxImageryProvider
+-->
+<!DOCTYPE html>
+<head>
+    <title>MapBox</title>
+    <link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script src="./js/Sandcastle-header.js"></script>
+    <script type="text/javascript" src="./js/require.min.js" data-main="./js/main"></script>
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+        }
+        #toolbar{
+            margin: 5px;
+            padding: 2px 5px;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+        }
+    </style>
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<div id="toolbar"></div>
+<script>
+    var mapboxProviders = [];
+    var mapboxProviderMenu = [];
+
+    function onload(Cesium) {
+        var mapboxStyle = ['mapbox.satellite',
+                            'mapbox.streets',
+                            'mapbox.light',
+                            'mapbox.dark',
+                            'mapbox.streets-satellite',
+                            'mapbox.wheatpaste',
+                            'mapbox.streets-basic',
+                            'mapbox.comic',
+                            'mapbox.outdoors',
+                            'mapbox.run-bike-hike',
+                            'mapbox.pencil',
+                            'mapbox.pirates',
+                            'mapbox.emerald',
+                            'mapbox.high-contrast'];
+        (function(){
+            for(var i=0; i<mapboxStyle.length;i++){
+                var imageryProvider = new Cesium.MapboxImageryProvider({
+                    mapId: mapboxStyle[i]
+                });
+
+                mapboxProviders.push(imageryProvider);
+            }
+        }());
+
+        (function(){
+            for(var i=0; i<mapboxStyle.length;i++){
+                var obj = {
+                            text : mapboxStyle[i],
+                            onselect : function(index){
+                                return function(){
+                                    var baseLayer = imageryLayers.get(0);
+                                    imageryLayers.addImageryProvider(mapboxProviders[index],1);
+                                    imageryLayers.remove(baseLayer);
+                                }
+                            }(i)
+                          };
+                mapboxProviderMenu.push(obj);
+            }           
+        }());
+
+        var viewer = new Cesium.Viewer('cesiumContainer', {
+            imageryProvider :mapboxProviders[0],
+            baseLayerPicker : false
+        });
+
+        var imageryLayers = viewer.imageryLayers;
+        Sandcastle.addDefaultToolbarMenu(mapboxProviderMenu);
+    };
+</script>
+</body>

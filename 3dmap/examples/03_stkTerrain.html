@@ -1,0 +1,44 @@
+<!--
+    How to use STK Terrain Server?
+    See the everest
+-->
+<!DOCTYPE html>
+<head>
+    <title>TianDiTu</title>
+    <link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script type="text/javascript" src="./js/require.min.js" data-main="./js/main"></script>
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<script>
+    function onload(Cesium) {
+
+        var viewer = new Cesium.Viewer('cesiumContainer', {
+            imageryProvider : new Cesium.BingMapsImageryProvider({
+                    url : 'https://dev.virtualearth.net',
+                    mapStyle : Cesium.BingMapsStyle.AERIAL,
+                    culture:"zh-Hans",
+                    key:"AlgsUaY9R3p9MHmp-GN-o4j9HsdPrxboqvpaWwL5Da5vwQv7YkdC426vW1s6Lxrk" // apply your own key from bing map
+                }),
+            baseLayerPicker : false
+        });
+
+        var cesiumTerrainProviderMeshes = new Cesium.createWorldTerrain({
+            //url : 'https://assets.agi.com/stk-terrain/v1/tilesets/world/tiles',
+            requestWaterMask : true,
+            requestVertexNormals : true
+        });
+        viewer.scene.globe.terrainProvider = cesiumTerrainProviderMeshes;
+
+        var target = new Cesium.Cartesian3(300770.50872389384, 5634912.131394585, 2978152.2865545116);
+        var offset = new Cesium.Cartesian3(6344.974098678562, -793.3419798081741, 2499.9508860763162);
+        viewer.camera.lookAt(target, offset);
+        viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY);
+    };
+</script>
+</body>

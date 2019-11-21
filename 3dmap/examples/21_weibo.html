@@ -1,0 +1,154 @@
+<!--
+    Dynamic Point-Line
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <title>Weibo</title>
+    <link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script src="./js/jquery.min.js"></script>
+    <script type="text/javascript" src="./js/require.min.js" data-main="js/main"></script>
+    <script type="text/javascript" src="./js/gps.js"></script>
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;background-color: #000000;
+        }
+    </style>
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<div id='loadingbar' class="spinner">
+    <div class="spinner-container container1">
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+        <div class="circle3"></div>
+        <div class="circle4"></div>
+    </div>
+    <div class="spinner-container container2">
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+        <div class="circle3"></div>
+        <div class="circle4"></div>
+    </div>
+    <div class="spinner-container container3">
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+        <div class="circle3"></div>
+        <div class="circle4"></div>
+    </div>
+</div>
+<script>
+    function onload(Cesium) {
+        clock = new Cesium.Clock();
+        clock.shouldAnimate = true;
+        vmClock = new Cesium.ClockViewModel(clock);
+
+        var viewer = new Cesium.Viewer('cesiumContainer',{
+            sceneModePicker:true,
+            navigation:false,
+            baseLayerPicker : false,
+            clockViewModel:vmClock,
+            imageryProvider:new Cesium.SingleTileImageryProvider({
+                url : './images/earthbump1k.jpg'
+            })
+        });
+
+        //viewer.imageryLayers.get(0).brightness = 0.15;
+        viewer.scene.mode = Cesium.SceneMode.SCENE2D;
+        $('#loadingbar').remove();
+
+        var resource = Cesium.Resource.createIfNeeded('./data/weibo.json');
+        resource.fetchJson().then(function(rs) {
+            var data1 = [];
+            var data2 = [];
+            var data3 = [];
+            ///////////////////////////////////////////////////
+            var animationObj = {
+                stepsRange: {
+                    start: 0,
+                    end: 10
+                },
+                trails: 1,
+                duration: 6
+            };
+            var _range = animationObj.stepsRange.end - animationObj.stepsRange.start;
+            var isAvailable = function isAvailable(currentTime) {
+                if (!Cesium.defined(currentTime)) {
+                    throw new Cesium.DeveloperError('time is required.');
+                }
+
+                var nMS = Cesium.JulianDate.toDate(currentTime).getTime()/animationObj.duration;
+                var time = (nMS%_range + animationObj.stepsRange.start);
+
+                var trails = trails || 10;
+                if (time && this.nameID > time - trails && this.nameID < time) {
+                    return true;
+                } else {
+                    return false;
+                }
+            };
+            /////////////////////////////////////////////////////
+            var height = 0;
+            var heightDynamic = 1;
+            var color1 = new Cesium.Color(200/255, 200/255, 0/255, 0.8);
+            for (var i = 0; i < rs[0].length; i=i+2) {
+                var entity = viewer.entities.add({
+                    position : Cesium.Cartesian3.fromDegrees(rs[0][i].geoCoord[0],rs[0][i].geoCoord[1],height),
+                    point : {
+                        show : true,
+                        color : color1,
+                        pixelSize : 0.7
+                    }
+                });
+            }
+
+            var color2 = new Cesium.Color(255/255, 250/255, 0/255, 0.8);
+            var color2D = new Cesium.Color(255/255, 250/255, 0/255, 0.9);
+            for (var i = 0; i < rs[1].length; i=i+1) {
+                viewer.entities.add({
+                    position : Cesium.Cartesian3.fromDegrees(rs[1][i].geoCoord[0],rs[1][i].geoCoord[1],height),
+                    point : {
+                        show : true,
+                        color : color2,
+                        pixelSize : 0.7
+                    }
+                });
+
+                var entity = viewer.entities.add({
+                    position : Cesium.Cartesian3.fromDegrees(rs[1][i].geoCoord[0],rs[1][i].geoCoord[1],heightDynamic),
+                    nameID:Math.random() * 10,
+                    point : {
+                        show : true,
+                        color : color2D,
+                        pixelSize : 1.618
+                    }
+                });
+                entity.isAvailable = isAvailable;
+            }
+
+            var color3 = new Cesium.Color(255/255, 250/255, 250/255, 0.6);
+            for (var i = 0; i < rs[2].length; i=i+2) {
+                viewer.entities.add({
+                    position : Cesium.Cartesian3.fromDegrees(rs[2][i].geoCoord[0],rs[2][i].geoCoord[1],height),
+                    point : {
+                        show : true,
+                        color : color3,
+                        pixelSize : 0.7
+                    }
+                });
+            }
+
+            viewer.zoomTo(viewer.entities);
+            // viewer.scene.camera.setView({
+            //     //将经度、纬度、高度的坐标转换为笛卡尔坐标
+            //     destination : Cesium.Cartesian3.fromDegrees(114.2827, 30.4434,126468)
+            // });
+        }).otherwise(function(error) {
+        });
+    }
+</script>
+</body>
+</html>

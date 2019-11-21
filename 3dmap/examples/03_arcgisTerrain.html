@@ -1,0 +1,92 @@
+<!--
+ * @Descripttion: 
+ * @version: 1.0
+ * @Author: zhangti
+ * @Date: 2019-11-20 17:48:00
+ * @LastEditors: sueRimn
+ * @LastEditTime: 2019-11-21 14:02:07
+ -->
+<!--
+	Format:https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer/tile/{z}/{y}/{x}
+	At first, I use HttpDebugger find this server, because ArcGIS Earth use this elevation3d server
+	Although it is height map form, in China, it is not easy to visit STK Terrain, it is also an appropriate solution.
+	Then I watched the tile content and the header is "CntZImage" which is the arcgis/lerc compression
+	Eventually, I create the ArcGisImageServerTerrainProvider class, so we can load thise terrain server easily, and you can download this file in Source/Core freely.
+	Note: ArcGIS HeightMap Terrain Server is WebMercatorTilingScheme.
+	There is a bug but I could not fix it without modifying the source code. For example, in level 13, I found some tiles have no height data,
+	the data is always 0, you can still request this tile. So, the state is TerrainState.RECEIVED
+-->
+<!DOCTYPE html>
+<head>
+    <title>ArcGis Elevation</title>
+	<link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+	<link rel="stylesheet" href="../common/plugin/jq/jquery-modal/css/jquery.my-modal.1.1.winStyle.css">
+	<script type="text/javascript" src="./js/require.min.js" data-main="./js/main"></script>
+	<script type="text/javascript" src="../Build/Cesium/CesiumBuild.js"></script>
+
+	<script type="text/javascript" src="../Build/Cesium/Cesium.js"></script>
+	<script type="text/javascript" src="../common/js/Cesium_init.js"></script>
+	<style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<!--
+	描述：右侧工具
+-->
+<div id="right-nav">
+	<div class="w">
+		<ul id="right-nav-list1">
+			<li><a><img src="./line.png"></a><div>测距离</div></li>
+			<li><a><img src="./area.png"></a><div>测面积</div></li>
+			<li><a><img src="./triangle.png"></a><div>三角测量</div></li>
+			<li><a><img src="./points.png"></a><div>闪烁点</div></li>
+			<li><a><img src="./draw.png"></a><div>画笔</div></li>
+			<li><a><img src="./arrows.png"></a><div>标绘</div></li>
+			<li><a><img src="./rm.png"></a><div>删除</div></li>
+		</ul>
+	</div>
+</div>
+<!--
+描述：标绘
+-->
+<div id="plot"></div>
+<script>
+   // function onload(Cesium) {
+		var terrainProvider = createArcGisElevation3DTerrainProvider(Cesium);
+		var viewer;
+		terrainProvider.readyPromise.then(function() {
+		viewer = new Cesium.Viewer('cesiumContainer', {
+				terrainProvider:terrainProvider,
+				imageryProvider : new Cesium.BingMapsImageryProvider({
+                    url : 'https://dev.virtualearth.net',
+                    mapStyle : Cesium.BingMapsStyle.AERIAL,
+                    culture:"zh-Hans",
+                    key:"AlgsUaY9R3p9MHmp-GN-o4j9HsdPrxboqvpaWwL5Da5vwQv7YkdC426vW1s6Lxrk" // apply your own key from bing map
+                }),
+				baseLayerPicker : false,
+
+			});
+
+			viewer.terrainProvider = terrainProvider;
+			viewer.scene.globe.depthTestAgainstTerrain = false;
+			viewer.scene.camera.flyTo({
+				destination : Cesium.Cartesian3.fromDegrees(87.4074, 27.9254,5756.992959404834),
+				orientation : {
+					heading : 4.7702,
+					pitch : 0.0857,
+					roll : 0
+				}
+			});
+			
+		}).otherwise(function(error) {
+			throw(error);
+		});
+	//}
+
+</script>
+
+</body>

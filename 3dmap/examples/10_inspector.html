@@ -1,0 +1,51 @@
+<!--
+    Inspector: a useful tool for debugger
+-->
+<!DOCTYPE html>
+<head>
+    <title>Inspector</title>
+    <link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script type="text/javascript" src="./js/require.min.js" data-main="./js/main"></script>
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<script>
+    function onload(Cesium) {
+        var viewer = new Cesium.Viewer('cesiumContainer');
+
+//        viewer.extend(Cesium.viewerPerformanceWatchdogMixin, {
+//                lowFrameRateMessage : 'Why is this going so <em>slowly</em>?'
+//        });
+
+        viewer.extend(Cesium.viewerCesiumInspectorMixin);
+
+        viewer.cesiumInspector.viewModel.performance = true;
+        viewer.cesiumInspector.viewModel._showPerformance();
+        viewer.cesiumInspector.viewModel.update();
+
+        var position = Cesium.Cartesian3.fromDegrees(-123.0744619, 44.0503706, 5000);
+        var heading = Cesium.Math.toRadians(135);
+        var pitch = 0;
+        var roll = 0;
+        var orientation = Cesium.Transforms.headingPitchRollQuaternion(position, heading, pitch, roll);
+
+        var entity = viewer.entities.add({
+            name : "../Apps/SampleData/models/CesiumAir/Cesium_Air.glb",
+            position :  position,
+            orientation : orientation,
+            model : {
+                uri : "../Apps/SampleData/models/CesiumAir/Cesium_Air.glb",
+                minimumPixelSize : 128,
+                maximumScale : 20000
+            }
+        });
+
+        viewer.entities.add(entity);
+    }
+</script>
+</body>

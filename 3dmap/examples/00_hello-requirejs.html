@@ -1,0 +1,30 @@
+<!--Because all demos are based on requirejs, so this demo shows how to include Cesium script through requirejs
+the key point is the role of data-main, if you are not familiar with requirejs, it's valuable for you to get a basic understanding about it
+Strictly, I am not familiar with requirejs, but there are two points I want to mention,
+first, I learned the skill of developMode from Echart, it is convenient to switch between debug and release,
+second, I found it is confusing to get the accurate relative path with or without "baseUrl", so I searched and got the explanation
+so I suggest you can write your own main.js personally, it is beneficial to improve your understanding. 
+当我第一次接触requirejs时，这篇文章带给我最大的帮助，特别是data-main对build和source相对路径的不同处理，有兴趣的可以读一下
+http://www.cnblogs.com/chyingp/p/requirejs-path-resolve.html
+http://www.ruanyifeng.com/blog/2012/11/require_js.html-->
+<!DOCTYPE html>
+<head>
+    <title>Hello (Again) World</title>
+    <link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script type="text/javascript" src="./js/require.min.js" data-main="./js/mainR3"></script>
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="cesiumContainer" class="fullSize"></div>
+<script>
+    function onload(Cesium) {
+        // personal key, you can apply your own key from Bing Map
+        Cesium.BingMapsApi.defaultKey = "AlgsUaY9R3p9MHmp-GN-o4j9HsdPrxboqvpaWwL5Da5vwQv7YkdC426vW1s6Lxrk";
+        var viewer = new Cesium.Viewer('cesiumContainer');
+    }
+</script>
+</body>

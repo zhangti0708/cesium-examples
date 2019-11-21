@@ -1,0 +1,72 @@
+<!--
+	How to load OSM server with MapboxImageryProvider
+-->
+<!DOCTYPE html>
+<head>
+    <title>OpenStreetMap</title>
+    <link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script src="./js/Sandcastle-header.js"></script>
+    <script type="text/javascript" src="./js/require.min.js" data-main="./js/main"></script>
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+        }
+        #toolbar{
+            margin: 5px;
+            padding: 2px 5px;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+        }
+    </style>
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<div id="toolbar"></div>
+<script>
+    var osmProviders = [];
+    var osmProviderMenu = [];
+
+    function onload(Cesium) {
+        var osmUrls = ['https://a.tile.openstreetmap.org',
+                       'https://b.tile.thunderforest.com/cycle',
+                        'https://a.tile.thunderforest.com/transport',
+                        'https://tile-b.openstreetmap.fr/hot' ];
+        var osmTitle = ['Standard','Cycle','Transport','Humanitarian'];
+
+        (function(){
+            for(var i=0; i<osmUrls.length;i++){
+                var imageryProvider = Cesium.createOpenStreetMapImageryProvider({
+                    url : osmUrls[i]
+                });
+
+                osmProviders.push(imageryProvider);
+            }
+        }());
+
+        (function(){
+            for(var i=0; i<osmUrls.length;i++){
+                var obj = {
+                            text : osmTitle[i],
+                            onselect : function(index){
+                                return function(){
+                                    var baseLayer = imageryLayers.get(0);
+                                    imageryLayers.addImageryProvider(osmProviders[index],1);
+                                    imageryLayers.remove(baseLayer);
+                                }
+                            }(i)
+                          };
+                osmProviderMenu.push(obj);
+            }           
+        }());
+
+        var viewer = new Cesium.Viewer('cesiumContainer', {
+            imageryProvider :osmProviders[0],
+            baseLayerPicker : false
+        });
+
+        var imageryLayers = viewer.imageryLayers;
+        Sandcastle.addDefaultToolbarMenu(osmProviderMenu);
+    };
+</script>
+</body>

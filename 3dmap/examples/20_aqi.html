@@ -1,0 +1,269 @@
+<!--
+    Real AQI Query and Visualization
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+<title>PM2.5</title>
+<link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+<script src="./js/Sandcastle-header.js"></script>
+<script type="text/javascript" src="./js/require.min.js" data-main="js/main"></script>
+<script type="text/javascript" src="./cesium_ext/HeatmapImageryProvider.js"></script>
+<style>
+html, body, #cesiumContainer {
+width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+}
+#toolbar{
+margin: 5px;
+padding: 2px 5px;
+position: absolute;
+left: 0px;
+top: 0px;
+}
+</style>
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<div id="toolbar">
+</div>
+<script>
+var canvas,ctx;
+
+var pixelRadius = 13;
+
+var nWidth = 500;
+var imgData = null;
+var circleTable = [];
+function draw() {
+	canvas = document.createElement('canvas');
+	canvas.width = nWidth;
+	canvas.height = nWidth;
+	ctx = canvas.getContext('2d');
+	ctx.beginPath();
+	/* 指定渐变区域 */
+	var grad = ctx.createLinearGradient(0,0, nWidth,0);
+	/* 指定几个颜色 */
+	grad.addColorStop(0.05,'rgb(0, 228, 0)'); // green
+	grad.addColorStop(0.15,'rgb(256, 256, 0)'); // yellow
+	grad.addColorStop(0.25,'rgb(256, 126, 0)'); // orange
+	grad.addColorStop(0.35,'rgb(256, 0, 0)'); // red
+	grad.addColorStop(0.5,'rgb(153, 0, 76)'); // purple
+	grad.addColorStop(0.8,'rgb(126, 0, 35)'); // maroon
+	/* 将这个渐变设置为fillStyle */
+	ctx.fillStyle = grad; 
+	/* 绘制矩形 */
+	ctx.rect(0,0, nWidth,nWidth);
+	ctx.fill();
+	// ctx.fillRect(0,0, 140,140);
+	imgData=ctx.getImageData(0,0,nWidth,1);
+}
+var currentRectangle,bWorking;
+var currentData;
+var bHeatMap = false;
+var heatLayer = null;
+
+function getData(){
+	var points = [];
+	var maxValue = 0,minValue = 0;
+
+	for (var i = currentData.length - 1; i >= 0; i--) {
+		var x = currentData[i].lon;
+		var y = currentData[i].lat;
+		var value = currentData[i].aqiValue;
+
+		maxValue = Math.max(maxValue, value);
+		minValue = Math.min(minValue,value);
+
+		points.push({
+			x : x,
+			y : y,
+			value : value
+		});
+	}
+	var data = {max: maxValue, points: points,min : minValue};
+	return data;
+}
+
+function getBounds(){
+	var bounds = {
+			north : currentRectangle.north * 180.0 / Math.PI,
+			west : currentRectangle.west* 180.0 / Math.PI,
+			south : currentRectangle.south* 180.0 / Math.PI,
+			east : currentRectangle.east* 180.0 / Math.PI
+	};
+	return bounds;
+}	
+
+function onload(Cesium,CesiumHeatmap) {
+	Sandcastle.addToolbarButton('HeatMap', function() {		
+		var data = getData();
+		var bounds = getBounds();
+				
+		var provider = createHeatmapImageryProvider(Cesium,{
+			data : data,
+			bounds : bounds,
+			chInstance : CesiumHeatmap
+		});
+		var layer = viewer.imageryLayers.addImageryProvider(provider);
+		viewer.entities.removeAll();
+		if (heatLayer != null){
+				viewer.imageryLayers.remove(heatLayer);
+				heatLayer = layer;	
+		}else{
+			heatLayer = layer;
+		} 
+	});
+
+	var viewer = new Cesium.Viewer('cesiumContainer', {
+			imageryProvider:new Cesium.SingleTileImageryProvider({
+                url : './images/2016c.jpg'
+            }),
+			baseLayerPicker : false,
+			geocoder:true
+		});
+				
+    viewer.scene.globe.depthTestAgainstTerrain = false;
+
+    var imageryLayers = viewer.imageryLayers;
+
+	currentRectangle = null;
+	bWorking = false;
+
+	function getLocation()
+	{
+		if (navigator.geolocation)
+		{
+		navigator.geolocation.getCurrentPosition(showPosition);
+		}
+	}
+	function showPosition(position)
+	{
+		viewer.scene.camera.flyTo({
+		destination : Cesium.Cartesian3.fromDegrees(position.coords.longitude, position.coords.latitude, 6378137)
+		}); 
+	}
+
+	getLocation();
+
+	draw();
+	var clock = viewer.cesiumWidget.clock;
+	var startTimestamp,endTimestamp ;
+	var timeout = 1000;
+	
+	var  send; 
+
+	function tick() {
+		endTimestamp = (new Date).getTime();
+		if(bWorking == false)
+		{
+			var localRectangle = viewer.camera.computeViewRectangle();
+			if(!localRectangle.equals(currentRectangle))
+			{
+				var bounds = localRectangle.south * 180.0 / Math.PI + "," 
+							+ localRectangle.west * 180.0 / Math.PI + "," 
+							+ localRectangle.north * 180.0 / Math.PI + "," 
+							+ localRectangle.east * 180.0 / Math.PI;
+
+				function startWorker(strBounds)
+				{
+					startTimestamp = endTimestamp = (new Date).getTime();
+					send = new Worker("./js/pmworkers.js");
+					var obj = {bounds:strBounds,imgData:imgData.data};
+					send.postMessage(obj);
+					bWorking = true;
+					
+					send.onmessage = function (event) {
+						currentData = event.data.entityTable;
+						var currentDate = event.data.date;
+						if(currentData.length != 0 && currentDate>startTimestamp){
+							viewer.entities.removeAll();
+							for (var i = currentData.length - 1; i >= 0; i--) {
+								var color = new Cesium.Color(currentData[i].color.red,currentData[i].color.green,currentData[i].color.blue,1.0);
+
+								viewer.entities.add({
+									position : Cesium.Cartesian3.fromDegrees(currentData[i].lon, currentData[i].lat),
+									billboard :{
+										image : './images/images.png',
+										width:pixelRadius *2,
+										height:pixelRadius *2,
+										color : color
+									},
+									name:currentData[i].name,
+									description:currentData[i].description
+								});
+
+								/*viewer.entities.add({
+									position : Cesium.Cartesian3.fromDegrees(currentData[i].lon, currentData[i].lat,100),
+									point : {
+										show : true, // default
+										color : color, // default: WHITE
+										pixelSize : 25, // default: 1
+										outlineColor : Cesium.Color.YELLOW, // default: BLACK
+										outlineWidth : 0 // default: 0
+									},
+									name:currentData[i].name,
+									description:currentData[i].description
+								});
+								var imgCircle = circleTable[currentData[i].aqiValue];
+								if(imgCircle == null){								
+									var circleCanvas = document.createElement('canvas');
+									circleCanvas.width = pixelRadius * 2;
+									circleCanvas.height = pixelRadius * 2;
+									circleCtx = circleCanvas.getContext('2d');
+									circleCtx.fillStyle = "#ffffff00";
+									circleCtx.globalAlpha = 0.0;
+									
+									circleCtx.fillRect(0, 0, pixelRadius*2, pixelRadius*2);
+									
+									var r = imgData.data[currentData[i].aqiValue*4];
+									var g = imgData.data[currentData[i].aqiValue*4+1];
+									var b = imgData.data[currentData[i].aqiValue*4+2];
+									
+									circleCtx.globalAlpha = 1.0;
+									circleCtx.beginPath();
+									circleCtx.arc(pixelRadius, pixelRadius, pixelRadius, 0, Math.PI * 2, true);
+									circleCtx.closePath();
+									var strColor = 'rgb('+r+','+g+','+b+')';
+									circleCtx.fillStyle = strColor;
+									circleCtx.fill();
+									
+									imgCircle = circleTable[currentData[i].aqiValue] = circleCanvas;									
+								}
+								viewer.entities.add({
+									position : Cesium.Cartesian3.fromDegrees(currentData[i].lon, currentData[i].lat),
+									billboard : {
+										image : imgCircle.toDataURL(), // default: undefined
+										show : true										
+									},
+									name:currentData[i].name,
+									description:currentData[i].description
+								});
+								*/
+							}						
+						
+							currentRectangle = localRectangle;
+						}
+						
+						bWorking = false;
+						send.terminate();
+					};
+				}
+
+				startWorker(bounds);
+			}
+		}
+		else if(endTimestamp - startTimestamp>timeout){
+			bWorking = false;
+			timeout += 1000;
+			send.terminate();
+		}
+	}
+	var helper = new Cesium.EventHelper();
+	helper.add(clock.onTick,tick);
+}
+</script>
+</body>
+</html>

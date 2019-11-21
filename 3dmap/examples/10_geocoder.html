@@ -1,0 +1,177 @@
+﻿<!--
+    Custom GeoCode: SuperMap POI Server
+-->
+<!DOCTYPE html>
+<head>
+    <title>Geocoder</title>
+    <link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script type="text/javascript" src="./js/require.min.js" data-main="./js/main"></script>
+    <script type="text/javascript" src="./js/gps.js"></script>
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<script>
+    function onload(Cesium) {
+
+        var url =  'http://{s}.tianditu.com/img_w/wmts?service=WMTS&version=1.0.0&request=GetTile&tilematrix={TileMatrix}&layer=img&style={style}&tilerow={TileRow}&tilecol={TileCol}&tilematrixset={TileMatrixSet}&format=tiles';
+        var viewer = new Cesium.Viewer('cesiumContainer', {
+            imageryProvider : new Cesium.WebMapTileServiceImageryProvider({
+                url :url,
+                layer : 'img',
+                style : 'default',
+                format : 'tiles',
+                tileMatrixSetID : 'w',
+                credit : new Cesium.Credit('天地图全球影像服务'),
+                subdomains : ['t0','t1','t2','t3','t4','t5','t6','t7'],
+                maximumLevel : 18
+            }),
+            baseLayerPicker : false
+        });
+
+        var imageryLayers = viewer.imageryLayers;
+        var url2 =  'http://{s}.tianditu.com/cia_w/wmts?service=WMTS&version=1.0.0&request=GetTile&tilematrix={TileMatrix}&layer=cia&style={style}&tilerow={TileRow}&tilecol={TileCol}&tilematrixset={TileMatrixSet}&format=tiles';
+        var labelImagery = new Cesium.WebMapTileServiceImageryProvider({
+            url : url2,
+            layer : 'cia',
+            style : 'default',
+            format : 'tiles',
+            tileMatrixSetID : 'w',
+            credit : new Cesium.Credit('天地图全球影像中文注记服务'),
+            subdomains : ['t0','t1','t2','t3','t4','t5','t6','t7']
+        });
+        imageryLayers.addImageryProvider(labelImagery);
+
+
+        function cancelGeocode(viewModel) {
+            viewModel._isSearchInProgress = false;
+            if (Cesium.defined(viewModel._geocodeInProgress)) {
+                viewModel._geocodeInProgress.cancel = true;
+                viewModel._geocodeInProgress = undefined;
+            }
+        }
+
+        function updateCamera(viewModel, destination) {
+            viewModel._scene.camera.flyTo({
+                destination : destination,
+                complete: function() {
+                    viewModel._complete.raiseEvent();
+                },
+                duration : viewModel._flightDuration,
+                endTransform : Cesium.Matrix4.IDENTITY
+            });
+        }
+
+        function geocode(viewModel) {
+            var query = viewModel.searchText;
+
+            if (/^\s*$/.test(query)) {
+                //whitespace string
+                return;
+            }
+
+            // If the user entered (longitude, latitude, [height]) in degrees/meters,
+            // fly without calling the geocoder.
+            var splitQuery = query.match(/[^\s,\n]+/g);
+            if ((splitQuery.length === 2) || (splitQuery.length === 3)) {
+                var longitude = +splitQuery[0];
+                var latitude = +splitQuery[1];
+
+                var obj = GPS.gcj_decrypt_exact(latitude,longitude);
+                var height = (splitQuery.length === 3) ? +splitQuery[2] : 300.0;
+
+                if (!isNaN(longitude) && !isNaN(latitude) && !isNaN(height)) {
+                    updateCamera(viewModel, Cesium.Cartesian3.fromDegrees(obj.lon,obj.lat, height));
+                    return;
+                }
+            }
+            viewModel._isSearchInProgress = true;
+
+            var smPOI = 'http://www.supermapol.com/iserver/services/localsearch/rest/searchdatas/China/poiinfos.jsonp';
+            var promise = Cesium.loadJsonp(smPOI, {
+                parameters : {
+                    keywords : query,
+                    city : "北京市",
+                    location : '',
+                    radius : '',
+                    leftLocation : '',
+                    rightLocation : '',
+                    pageSize : 50,
+                    pageNum : 1,
+                    key:"S4lcB1k7tOv22H2paEuN7RSf" // your personal key, you can get it from SuperMap Online
+                },
+                callbackParameterName : 'callback',
+                jsonpName : 'callBack'
+            });
+            var geocodeInProgress = viewModel._geocodeInProgress = Cesium.when(promise, function(result) {
+                if (geocodeInProgress.cancel) {
+                    return;
+                }
+                viewModel._isSearchInProgress = false;
+
+                if (result.length === 0 || result.totalHints === 0) {
+                    viewModel.searchText = viewModel._searchText + ' (not found)';
+                    return;
+                }
+                if(Cesium.defined(viewModel.entities)){
+                    for(var i=0;i<viewModel.entities.length;i++)
+                    {
+                        viewer.entities.remove(viewModel.entities[i]);
+                    }
+                }
+                viewModel.entities = [];
+
+                var obj;
+                for(var i=0;i<result.poiInfos.length;i++)
+                {
+                    var resource = result.poiInfos[i];
+                    viewModel._searchText = resource.name;
+                    var location = resource.location;
+
+                    obj = GPS.gcj_decrypt_exact(location.y,location.x);
+
+                    var entity = {
+                        id:resource.name + i,
+                        position : Cesium.Cartesian3.fromDegrees(obj.lon,obj.lat),
+                        point : {
+                            show : true, // default
+                            color : Cesium.Color.SKYBLUE, // default: WHITE
+                            pixelSize : 10, // default: 1
+                            outlineColor : Cesium.Color.YELLOW, // default: BLACK
+                            outlineWidth : 3 // default: 0
+                        }
+                    };
+
+                    entity.description = new Cesium.ConstantProperty(resource.name);
+
+                    viewModel.entities.push(entity);
+                    viewer.entities.add(entity);
+                }
+
+                updateCamera(viewModel, Cesium.Cartesian3.fromDegrees(obj.lon,obj.lat, height));
+            }, function() {
+                if (geocodeInProgress.cancel) {
+                    return;
+                }
+
+                viewModel._isSearchInProgress = false;
+                viewModel.searchText = viewModel._searchText + ' (error)';
+            });
+        }
+
+        var geocoder = viewer.geocoder.viewModel;
+
+        geocoder._searchCommand = Cesium.createCommand(function() {
+            if (geocoder.isSearchInProgress) {
+                cancelGeocode(geocoder);
+            } else {
+                geocode(geocoder);
+            }
+        });
+    }
+</script>
+</body>

@@ -1,0 +1,48 @@
+<!--
+    Empty EllipsoidTerrainProvider, height is always zero
+    But I can set it as WebMercatorTilingScheme
+-->
+<!DOCTYPE html>
+<head>
+    <title>TianDiTu</title>
+    <link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script type="text/javascript" src="./js/require.min.js" data-main="./js/main"></script>
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<script>
+    function onload(Cesium) {
+
+        var viewer = new Cesium.Viewer('cesiumContainer', {
+            imageryProvider : new Cesium.WebMapTileServiceImageryProvider({
+                url : 'http://t0.tianditu.com/img_c/wmts?service=WMTS&version=1.0.0&request=GetTile&tilematrix={TileMatrix}&layer=img&style={style}&tilerow={TileRow}&tilecol={TileCol}&tilematrixset={TileMatrixSet}&format=tiles',
+                layer : 'img',
+                style : 'default',
+                format : 'tiles',
+                tileMatrixSetID : 'c',
+                credit : new Cesium.Credit('天地图全球影像服务'),
+                subdomains : ['t0','t1','t2','t3','t4','t5','t6','t7'],
+                maximumLevel : 15,
+                tilingScheme : new Cesium.GeographicTilingScheme(),
+                tileMatrixLabels:['1','2','3','4','5','6','7']
+            }),
+            baseLayerPicker : false
+        });
+
+        var terrainProvider = new Cesium.EllipsoidTerrainProvider({
+            tilingScheme : new Cesium.WebMercatorTilingScheme({ ellipsoid : Cesium.Ellipsoid.WGS84 })
+        });
+        viewer.scene.globe.terrainProvider = terrainProvider;
+
+        var target = new Cesium.Cartesian3(300770.50872389384, 5634912.131394585, 2978152.2865545116);
+        var offset = new Cesium.Cartesian3(6344.974098678562, -793.3419798081741, 2499.9508860763162);
+        viewer.camera.lookAt(target, offset);
+        viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY);
+    };
+</script>
+</body>

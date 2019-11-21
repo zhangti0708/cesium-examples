@@ -1,0 +1,197 @@
+@import url(http://netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome.css);
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,700);
+
+* {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  position: relative
+}
+
+html,
+body {
+  height: 100%
+}
+
+body {
+  border: 1px solid transparent;
+  font: 300 1em "Source Sans Pro", sans-serif;
+}
+
+body #cdawrap {
+  background: #f9f9f9;
+  top: 55px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.back {
+  text-decoration: none;
+  color: #888;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 70%;
+  letter-spacing: 1px;
+  display: inline-block;
+  margin-left: 30px;
+}
+
+p {
+  margin-bottom: 10px
+}
+
+.cn-wrapper {
+  width: 26em;
+  height: 26em;
+  position: fixed;
+  z-index: 10;
+  bottom: 0;
+  left: 50%;
+  margin-left: -200px;
+  pointer-events: none;
+  border: 1px solid #7C5089;
+  -webkit-transition: all .3s ease;
+  transition: all .3s ease
+}
+
+.cn-wrapper:after {
+  content: "";
+  display: block;
+  height: 8px;
+  width: 8px;
+  background-color: maroon;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -4px;
+  margin-left: -4px;
+  border-radius: 50%;
+  z-index: 11
+}
+
+.cn-wrapper li {
+  position: absolute;
+  font-size: 1.5em;
+  width: 10em;
+  height: 10em;
+  overflow:hidden;
+  -webkit-transform-origin: 100% 100%;
+  transform-origin: 100% 100%;
+  background-color: #eee;
+  border: 1px solid #ddd;
+  -webkit-transition: all 1s ease;
+  transition: all 1s ease;
+  color: #aaa
+}
+
+.cn-wrapper li a {
+  display: block;
+  font-size: 1.2em;
+  height: 13.5em;
+  width: 13.5em;
+  position: absolute;
+  bottom: -6.75em;
+  right: -6.75em;
+  text-decoration: none;
+  color: white;
+  -webkit-transition: background-color .3s ease, -webkit-transform .8s ease;
+  transition: background-color .3s ease, -webkit-transform .8s ease;
+  transition: background-color .3s ease, transform .8s ease;
+  background-color: #7C5089
+}
+
+button {
+  background: none;
+  border: 5px solid #ddd;
+  padding: 5px 10px;
+  text-decoration: none;
+  color: #999;
+  font-family: Arial;
+  margin-top: 5em;
+}
+
+button[disabled] {
+  color: #eee
+}
+
+.steps {
+  color: #eee;
+  background-color: #7C5089;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+  z-index: 20
+}
+
+.steps:before {
+  content: "- "
+}
+span{
+  font-size:1.3em;
+}
+
+.info {
+  padding-left: 10px;
+  color: #888;
+  margin: 1em 0;
+  position: absolute;
+  bottom: 0;
+  left: 0
+}
+
+.info li {
+  line-height: 1.5
+}
+
+.info li:first-child:before {
+  content: "";
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background-color: #eee;
+  border: 1px solid #ddd;
+  margin-right: 10px;
+  vertical-align: bottom
+}
+
+.info li:nth-child(2):before {
+  content: "";
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #7C5089;
+  margin-right: 10px;
+  vertical-align: bottom
+}
+
+.info li:nth-child(3):before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: #7C5089;
+  margin-right: 10px;
+  vertical-align: bottom
+}
+
+.info li:nth-child(4):before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: maroon;
+  border-radius: 50%;
+  margin-right: 10px;
+  vertical-align: center
+}
+
+em {
+  font-size: .8em;
+  color: #888
+}

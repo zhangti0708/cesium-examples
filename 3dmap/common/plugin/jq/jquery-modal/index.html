@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<!--默认风格-->
+		<!--<link rel="stylesheet" href="css/jquery.my-modal.1.1.css" />-->
+		<!--win风格-->
+		<link rel="stylesheet" type="text/css" href="css/jquery.my-modal.1.1.winStyle.css" />
+
+	</head>
+
+	<body>
+		<button class="btn1">点击我，打开</button>
+		<!--
+        	描述：下面为模板
+        -->
+		<div class="m-modal">
+			<div class="m-modal-dialog">
+				<div class="m-top">
+					<h4 class="m-modal-title">
+						jQuery简介
+					</h4>
+					<span class="m-modal-close">&times;</span>
+				</div>
+				<div class="m-middle">
+					<!--content-->
+					<p>jQuery是一个快速、简洁的JavaScript框架，是继Prototype之后又一个优秀的JavaScript代码库（或JavaScript框架）。jQuery设计的宗旨是“write Less，Do More”，即倡导写更少的代码，做更多的事情。它封装JavaScript常用的功能代码，提供一种简便的JavaScript设计模式，优化HTML文档操作、事件处理、动画设计和Ajax交互。</p>
+					
+				</div>
+				<div class="m-bottom">
+					<button class="m-btn-sure">确定</button>
+					<button class="m-btn-cancel">取消</button>
+				</div>
+			</div>
+		</div>
+		<!--<script type="text/javascript" data-main="js/main.js" src="js/require.js"></script>-->
+		<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+		<script type="text/javascript" src="js/jquery.my-modal.1.1.js"></script>
+		<script>
+			var m1 = new MyModal.modal(function() {
+				alert("你点击了确定");
+			});
+			$('.btn1').on("click", function() {
+				m1.show();
+			});
+		</script>
+	</body>
+
+</html>
