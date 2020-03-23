@@ -6,14 +6,7 @@
  * @LastEditors: sueRimn
  * @LastEditTime: 2019-11-21 15:41:15
  -->
-# cesium-test
-
--- cesium 三维可视化系统<br>
-
-运行项目需要data目录<br>
-存放位置 ： ../common/3d/data<br>
-由于数据量较大,压缩上传至csdn:  https://download.csdn.net/download/weixin_40902527/11629130<br>
-请自行下载<br>
+# cesium-example
 
  -- cesium 整合的三维效果<br>
 <a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./map1.png" height="80%" width="80%" /></a><br>
