@@ -9,6 +9,10 @@
 # cesium-example
 
  -- cesium 整合的三维效果<br>
+ 
+<a href="http://zhangticcc.gitee.io/city3d/city02.html"><img alt="" height="80%" src="https://img-blog.csdnimg.cn/20200610090505938.gif" width="80%" ></a>&nbsp;
+ <a href="http://zhangticcc.gitee.io/city3d/city.html"><img alt="" height="80%" src="https://img-blog.csdnimg.cn/20200610180023340.gif" width="80%" ></a>&nbsp;
+ 
 <a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./map1.png" height="80%" width="80%" /></a><br>
 <a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./map2.png" height="80%" width="80%" /></a><br>
 <a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./map3.png" height="80%" width="80%" /></a><br>
@@ -16,6 +20,7 @@
 <a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./map1.gif" height="80%" width="80%"  /></a>&nbsp;
 <a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./map2.gif" height="80%" width="80%"  /></a>&nbsp;
 <a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./map3.gif" height="80%" width="80%"  /></a>&nbsp;
+<br>
 1.轨迹回放 <br>
 2.三维效果<br>
 3.图层<br>
@@ -35,3 +40,5 @@
 <a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./3dmap/examples/img/fx01.gif" height="80%" width="80%"  /></a>&nbsp;
 <a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./3dmap/examples/img/fx04.gif" height="80%" width="80%"  /></a>&nbsp;
 <a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./3dmap/examples/img/fx06.gif" height="80%" width="80%"  /></a>&nbsp;
+
+
