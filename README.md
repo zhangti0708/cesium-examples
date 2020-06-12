@@ -1,44 +1,45 @@
-<!--
- * @Descripttion: 
- * @version: 1.0
- * @Author: zhangti
- * @Date: 2019-08-27 18:29:55
- * @LastEditors: sueRimn
- * @LastEditTime: 2019-11-21 15:41:15
- -->
-# cesium-example
 
- -- cesium 整合的三维效果<br>
+# Cesium-Examples
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+ -- 学习cesium 添加的一些拓展示例和插件<br>
+ 
+ cesium城市可视化<br>
+ 
+ <a href="http://zhangticcc.gitee.io/city3d/city02.html"><img alt="" height="80%" src="https://img-blog.csdnimg.cn/20200611184047266.gif" width="80%" ></a>&nbsp;
  
 <a href="http://zhangticcc.gitee.io/city3d/city02.html"><img alt="" height="80%" src="https://img-blog.csdnimg.cn/20200610090505938.gif" width="80%" ></a>&nbsp;
+<a href="http://zhangticcc.gitee.io/city3d/city02.html">点击预览在线效果</a><br>
+
  <a href="http://zhangticcc.gitee.io/city3d/city.html"><img alt="" height="80%" src="https://img-blog.csdnimg.cn/20200610180023340.gif" width="80%" ></a>&nbsp;
+ <a href="http://zhangticcc.gitee.io/city3d/city.html">点击预览在线效果</a><br>
  
-<a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./map1.png" height="80%" width="80%" /></a><br>
-<a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./map2.png" height="80%" width="80%" /></a><br>
-<a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./map3.png" height="80%" width="80%" /></a><br>
+ cesium功能插件<br>
+  
+<a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="https://img-blog.csdnimg.cn/20191121162549211.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MDkwMjUyNw==,size_16,color_FFFFFF,t_70" height="80%" width="80%" /></a><br>
 
-<a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./map1.gif" height="80%" width="80%"  /></a>&nbsp;
-<a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./map2.gif" height="80%" width="80%"  /></a>&nbsp;
-<a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./map3.gif" height="80%" width="80%"  /></a>&nbsp;
-<br>
-1.轨迹回放 <br>
-2.三维效果<br>
-3.图层<br>
-4.模型<br>
-5.图标<br>
-6.绘图,量测工具,标绘<br>
-.....
+<a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="https://img-blog.csdnimg.cn/20191121150156859.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MDkwMjUyNw==,size_16,color_FFFFFF,t_70" height="80%" width="80%" /></a><br>
 
-<a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./3dmap/examples/img/3dtiles.gif" height="80%" width="80%"  /></a>&nbsp;
-<a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./3dmap/examples/img/gugong.gif" height="80%" width="80%"  /></a>&nbsp;
-<a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./3dmap/examples/img/weixing.gif" height="80%" width="80%"  /></a>&nbsp;
-<a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./3dmap/examples/img/3dtiles.gif" height="80%" width="80%"  /></a>&nbsp;
-<a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./3dmap/examples/img/fly2.gif" height="80%" width="80%"  /></a>&nbsp;
-<a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./3dmap/examples/img/wmsw.gif" height="80%" width="80%"  /></a>&nbsp;
-<a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./3dmap/examples/img/wmsa.gif" height="80%" width="80%"  /></a>&nbsp;
-<a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./3dmap/examples/img/winds.gif" height="80%" width="80%"  /></a>&nbsp;
-<a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./3dmap/examples/img/fx01.gif" height="80%" width="80%"  /></a>&nbsp;
-<a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./3dmap/examples/img/fx04.gif" height="80%" width="80%"  /></a>&nbsp;
-<a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="./3dmap/examples/img/fx06.gif" height="80%" width="80%"  /></a>&nbsp;
+<a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="https://img-blog.csdnimg.cn/20191121150156859.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MDkwMjUyNw==,size_16,color_FFFFFF,t_70" height="80%" width="80%" /></a><br>
+
+示例界面<br><a href="http://zhangticcc.gitee.io/cesiumext/examples/examples.html#3D">点击预览在线地址><br>
+
+<a href="http://zhangticcc.gitee.io/cesiumext/examples/examples.html#3D"><img src="https://img-blog.csdnimg.cn/20191121150608158.gif" height="80%" width="80%"  /></a>&nbsp;
+
+<a href="http://zhangticcc.gitee.io/cesiumext/examples/examples.html#3D"><img src="https://img-blog.csdnimg.cn/20191121150654980.gif" height="80%" width="80%"  /></a>&nbsp;
+
+<a href="http://zhangticcc.gitee.io/cesiumext/examples/examples.html#3D"><img src="https://img-blog.csdnimg.cn/20191121150716729.gif" height="80%" width="80%"  /></a>&nbsp;
+<a href="https://blog.csdn.net/weixin_40902527/article/details/100561094"><img src="https://img-blog.csdnimg.cn/20200218172256663.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MDkwMjUyNw==,size_16,color_FFFFFF,t_70" height="80%" width="80%"  /></a>&nbsp;
+
+基于vue的三维示例: <a href="http://zhangticcc.gitee.io/webgis/#/login?redirect=%2Fdashboard">点击预览在线地址><br>
+ 
+  <a href="http://zhangticcc.gitee.io/webgis/#/login?redirect=%2Fdashboard"><img src="https://img-blog.csdnimg.cn/20200522190732776.gif" height="80%" width="80%"  /></a>&nbsp;
+ 
+ <a href="http://zhangticcc.gitee.io/webgis/#/login?redirect=%2Fdashboard"><img src="https://img-blog.csdnimg.cn/20200527171426876.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MDkwMjUyNw==,size_16,color_FFFFFF,t_70" height="80%" width="80%"  /></a>&nbsp;
+ 
+ <a href="http://zhangticcc.gitee.io/webgis/#/login?redirect=%2Fdashboard"><img src=" https://img-blog.csdnimg.cn/2020051216060748.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MDkwMjUyNw==,size_16,color_FFFFFF,t_70" height="80%" width="80%"  /></a>&nbsp;
+
+
 
 
