@@ -9,11 +9,11 @@
  
  <a href="http://zhangticcc.gitee.io/city3d/city02.html"><img alt="" height="80%" src="https://img-blog.csdnimg.cn/20200611184047266.gif" width="80%" ></a>&nbsp;
  
-<a href="http://zhangticcc.gitee.io/city3d/city02.html"><img alt="" height="80%" src="https://img-blog.csdnimg.cn/20200610090505938.gif" width="80%" ></a>&nbsp;
-<a href="http://zhangticcc.gitee.io/city3d/city02.html">点击预览在线效果</a><br>
+<a href="http://zhangticcc.gitee.io/city3d/city.html"><img alt="" height="80%" src="https://img-blog.csdnimg.cn/20200610090505938.gif" width="80%" ></a>&nbsp;
+<a href="http://zhangticcc.gitee.io/city3d/city.html">点击预览在线效果</a><br>
 
- <a href="http://zhangticcc.gitee.io/city3d/city.html"><img alt="" height="80%" src="https://img-blog.csdnimg.cn/20200610180023340.gif" width="80%" ></a>&nbsp;
- <a href="http://zhangticcc.gitee.io/city3d/city.html">点击预览在线效果</a><br>
+ <a href="http://zhangticcc.gitee.io/city3d/city2.html"><img alt="" height="80%" src="https://img-blog.csdnimg.cn/20200618175135166.gif" width="80%" ></a>&nbsp;
+ <a href="http://zhangticcc.gitee.io/city3d/city2.html">点击预览在线效果</a><br>
  
  cesium功能插件<br>
   
