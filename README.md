@@ -4,6 +4,17 @@
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 ## 学习cesium 添加的一些拓展示例和插件<br>
+
+ ### 使用
+
+ ##### git clone https://github.com/zhangti0708/cesiumEXP.git
+
+ ##### unzip cesiumEXP.zip
+
+ ##### 将map目录直接放在web服务器下直接浏览
+
+ ##### 部分功能做过简单封装，可以借鉴不建议直接使用；
+
  
  ## cesium城市可视化
  
@@ -14,8 +25,11 @@
 <a href="http://zhangticcc.gitee.io/city3d/city.html"><img alt="" height="80%" src="https://img-blog.csdnimg.cn/20200610090505938.gif" width="80%" ></a>&nbsp;
 <a href="http://zhangticcc.gitee.io/city3d/city.html">点击预览在线效果</a><br>
 
- <a href="http://zhangticcc.gitee.io/city3d/city2.html"><img alt="" height="80%" src="https://img-blog.csdnimg.cn/20200618175135166.gif" width="80%" ></a>&nbsp;
+ <a href="http://zhangticcc.gitee.io/city3d/city2.html"><img alt="" height="80%" src="https://img-blog.csdnimg.cn/2020062209483344.gif" width="80%" ></a>&nbsp;
  <a href="http://zhangticcc.gitee.io/city3d/city2.html">点击预览在线效果</a><br>
+
+ <a href="http://zhangticcc.gitee.io/city3d/city2.html"><img alt="" height="80%" src=" https://img-blog.csdnimg.cn/20200624163907689.gif" width="80%" ></a>&nbsp;
+
  
  ### cesium功能插件
   
