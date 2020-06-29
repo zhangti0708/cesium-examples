@@ -1,0 +1,98 @@
+.cesium-canvas-container.cesium-interactive,
+.cesium-ctrl-group > button.cesium-ctrl-compass {
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+    cursor: grab;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.cesium-canvas-container.cesium-interactive:active,
+.cesium-ctrl-group > button.cesium-ctrl-compass:active {
+    cursor: -webkit-grabbing;
+    cursor: -moz-grabbing;
+    cursor: grabbing;
+}
+
+.cesium-ctrl-top-left,
+.cesium-ctrl-top-right,
+.cesium-ctrl-bottom-left,
+.cesium-ctrl-bottom-right { position: absolute; pointer-events: none; z-index: 2; }
+.cesium-ctrl-top-left     { top: 0; left: 0; }
+.cesium-ctrl-top-right    { top: 0; right: 0; }
+.cesium-ctrl-bottom-left  { bottom: 0; left: 0; }
+.cesium-ctrl-bottom-right { right: 0; bottom: 0; }
+
+.cesium-ctrl { clear: both; pointer-events: auto; }
+.cesium-ctrl-top-left .cesium-ctrl     { margin: 10px 0 0 10px; float: left; }
+.cesium-ctrl-top-right .cesium-ctrl    { margin: 10px 10px 0 0; float: right; }
+.cesium-ctrl-bottom-left .cesium-ctrl  { margin: 0 0 10px 10px; float: left; }
+.cesium-ctrl-bottom-right .cesium-ctrl { margin: 0 10px 10px 0; float: right; }
+
+.cesium-ctrl-group {
+    border-radius: 4px;
+    -moz-box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+    -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    background: #fff;
+    position: absolute;
+    right: 20px;
+    top: 60px
+}
+
+.cesium-ctrl-group > button {
+    width: 30px;
+    height: 30px;
+    display: block;
+    padding: 0;
+    outline: none;
+    border: 0;
+    box-sizing: border-box;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.cesium-ctrl-group > button + button {
+    border-top: 1px solid #ddd;
+}
+
+/* https://bugzilla.mozilla.org/show_bug.cgi?id=140562 */
+.cesium-ctrl > button::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+.cesium-ctrl > button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.cesium-ctrl-icon,
+.cesium-ctrl-icon > .cesium-ctrl-compass-arrow {
+    speak: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.cesium-ctrl-icon {
+    padding: 5px;
+}
+
+.cesium-ctrl-icon.cesium-ctrl-zoom-out {
+    background-image: url('data:image/svg+xml:base64,PHN2ZyB2aWV3Qm94PScwIDAgMjAgMjAnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zyc+DQogIDxwYXRoIHN0eWxlPSdmaWxsOiMzMzMzMzM7JyBkPSdtIDcsOSBjIC0wLjU1NCwwIC0xLDAuNDQ2IC0xLDEgMCwwLjU1NCAwLjQ0NiwxIDEsMSBsIDYsMCBjIDAuNTU0LDAgMSwtMC40NDYgMSwtMSAwLC0wLjU1NCAtMC40NDYsLTEgLTEsLTEgeicgLz4NCjwvc3ZnPg0K');
+}
+
+.cesium-ctrl-icon.cesium-ctrl-zoom-in {
+    background-image: url('data:image/svg+xml:base64,PHN2ZyB2aWV3Qm94PScwIDAgMjAgMjAnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zyc+DQogIDxwYXRoIHN0eWxlPSdmaWxsOiMzMzMzMzM7JyBkPSdNIDEwIDYgQyA5LjQ0NiA2IDkgNi40NDU5OTA0IDkgNyBMIDkgOSBMIDcgOSBDIDYuNDQ2IDkgNiA5LjQ0NiA2IDEwIEMgNiAxMC41NTQgNi40NDYgMTEgNyAxMSBMIDkgMTEgTCA5IDEzIEMgOSAxMy41NTQwMSA5LjQ0NiAxNCAxMCAxNCBDIDEwLjU1NCAxNCAxMSAxMy41NTQwMSAxMSAxMyBMIDExIDExIEwgMTMgMTEgQyAxMy41NTQgMTEgMTQgMTAuNTU0IDE0IDEwIEMgMTQgOS40NDYgMTMuNTU0IDkgMTMgOSBMIDExIDkgTCAxMSA3IEMgMTEgNi40NDU5OTA0IDEwLjU1NCA2IDEwIDYgeicgLz4NCjwvc3ZnPg0K');
+}
+
+.cesium-ctrl-icon.cesium-ctrl-compass > .cesium-ctrl-compass-arrow {
+    width: 20px;
+    height: 20px;
+    margin: 5px;
+    background-image: url('data:image/svg+xml:base64,PHN2ZyB2aWV3Qm94PScwIDAgMjAgMjAnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zyc+DQoJPHBvbHlnb24gZmlsbD0nIzMzMzMzMycgcG9pbnRzPSc2LDkgMTAsMSAxNCw5Jy8+DQoJPHBvbHlnb24gZmlsbD0nI0NDQ0NDQycgcG9pbnRzPSc2LDExIDEwLDE5IDE0LDExICcvPg0KPC9zdmc+DQo=');
+    background-repeat: no-repeat;
+    display: inline-block;
+}

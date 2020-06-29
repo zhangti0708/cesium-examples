@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>baidu map move</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="../2d/css/style.css">
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=nuWah68S1WieW2AEwiT8T3Ro&s=1"></script>
+    <script type="text/javascript" src="../2d/mapstyle/dark.js"></script>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script type="text/javascript" src="../2d/build/baidu-map-moveLine.js"></script>
+    <script type="text/javascript" src="../2d/js/dat.gui.js"></script>
+    <script type="text/javascript">
+        var map = new BMap.Map('map', {
+            minZoom: 5
+        });
+        map.centerAndZoom(new BMap.Point(112.03956, 26.063677), 6);
+        map.enableScrollWheelZoom(true);
+        map.setMapStyle({
+            styleJson: styleJson
+        });
+
+        var data = [{
+            from: {
+                city: '广州',
+                lnglat: [113.270793, 23.135308]
+            },
+            to: {
+                city: '衡山',
+                lnglat: [112.612787, 27.317599]
+            }
+        }, {
+            from: {
+                city: '广州',
+                lnglat: [113.270793, 23.135308]
+            },
+            to: {
+                city: '北京',
+                lnglat: [116.413554, 39.911013]
+            }
+        }, {
+            from: {
+                city: '广州',
+                lnglat: [113.270793, 23.135308]
+            },
+            to: {
+                city: '三亚',
+                lnglat: [109.518646, 18.258217]
+            }
+        }, {
+            from: {
+                city: '广州',
+                lnglat: [113.270793, 23.135308]
+            },
+            to: {
+                city: '上海',
+                lnglat: [121.480237, 31.236305]
+            }
+        }, {
+            from: {
+                city: '广州',
+                lnglat: [113.270793, 23.135308]
+            },
+            to: {
+                city: '韶关',
+                lnglat: [113.603757, 24.816174]
+            }
+        }];
+
+        var moveLine = new MoveLine(map, {
+            //marker点半径
+            markerRadius: 2,
+            //marker点颜色,为空或null则默认取线条颜色
+            markerColor: null,
+            //线条类型 solid、dashed、dotted
+            lineType: 'solid',
+            //线条宽度
+            lineWidth: 1,
+            //线条颜色
+            colors: ['#F9815C', '#F8AB60', '#EDCC72', '#E2F194', '#94E08A', '#4ECDA5'],
+            //移动点半径
+            moveRadius: 2,
+            //移动点颜色
+            fillColor: '#fff',
+            //移动点阴影颜色
+            shadowColor: '#fff',
+            //移动点阴影大小
+            shadowBlur: 5,
+
+            data: data
+        });
+
+        var options = {
+            //移动点半径
+            moveRadius: 2,
+            //移动点颜色
+            fillColor: '#fff',
+            //移动点阴影颜色
+            shadowColor: '#fff',
+            //移动点阴影大小
+            shadowBlur: 10,
+        };
+
+        function finished() {
+            moveLine.update(options);
+        }
+
+        var gui = new dat.GUI({
+            nameMap: {
+                moveRadius: '移动点半径',
+                fillColor: '移动点颜色',
+                shadowColor: '移动点阴影颜色',
+                shadowBlur: '移动点阴影大小',
+            }
+        });
+
+        finished();
+        gui.add(options, 'moveRadius', 1, 10).onFinishChange(finished);
+        gui.addColor(options, 'fillColor').onChange(finished);
+        gui.addColor(options, 'shadowColor').onChange(finished);
+        gui.add(options, 'shadowBlur', 0, 20).onChange(finished);
+    </script>
+</body>

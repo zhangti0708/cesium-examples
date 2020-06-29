@@ -1,0 +1,117 @@
+<!--
+ * @Descripttion: 
+ * @version: 1.0
+ * @Author: zhangti
+ * @Date: 2019-12-12 15:40:58
+ * @LastEditors: sueRimn
+ * @LastEditTime: 2019-12-12 15:54:27
+ -->
+<!--
+	Format:https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer/tile/{z}/{y}/{x}
+	At first, I use HttpDebugger find this server, because ArcGIS Earth use this elevation3d server
+	Although it is height map form, in China, it is not easy to visit STK Terrain, it is also an appropriate solution.
+	Then I watched the tile content and the header is "CntZImage" which is the arcgis/lerc compression
+	Eventually, I create the ArcGisImageServerTerrainProvider class, so we can load thise terrain server easily, and you can download this file in Source/Core freely.
+	Note: ArcGIS HeightMap Terrain Server is WebMercatorTilingScheme.
+	There is a bug but I could not fix it without modifying the source code. For example, in level 13, I found some tiles have no height data,
+	the data is always 0, you can still request this tile. So, the state is TerrainState.RECEIVED
+-->
+<!DOCTYPE html>
+<head>
+    <title>demo</title>
+	<link href="../Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+	<script type="text/javascript" src="../Build/Cesium/Cesium.js"></script>
+	<script type="text/javascript" src="../common/js/Cesium_init.js"></script>
+	<script type="text/javascript" src="../libs/CesiumMeasure.min.js"></script>
+	<style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+		}
+		#menuHolder {
+			position: absolute;
+			top:0px;
+			left: 0px;
+		}
+		#toolbar {
+			position: absolute;
+			top: 20px;
+			right: 30px;
+			z-index: 999;
+		}
+		table {
+			color :#fff;
+		}
+    </style>
+</head>
+<body>
+<!--
+	描述：cesium球
+-->
+<div id="cesiumContainer"></div>			
+<!--
+	描述：右侧工具
+-->
+<div id="right-nav" style="position: absolute;top: 5px;left: 5px;">
+	<button id="elevation">elevation</button>
+	<button id="point">point</button>
+	<button id="line">line</button>
+	<button id="polygon">polygon</button>
+</div>
+<!--
+	描述：标绘
+-->
+<script>
+	//地图资源
+	var GoogleMap = ImageryProviderWebExtendTool.createGoogleMapsByUrl(Cesium, { url: "http://mt1.google.cn/vt/lyrs=s&hl=zh-CN&x={x}&y={y}&z={z}" });
+			var viewer = new Cesium.Viewer('cesiumContainer', {
+			imageryProvider: GoogleMap,
+			shouldAnimate : false,
+			selectionIndicator: false,
+			baseLayerPicker:false,
+			homeButton:false,
+			animation: true,
+			timeline:true,
+			geocoder: false,
+			sceneModePicker: false,
+			navigationHelpButton: false,
+			infoBox: false,
+			fullscreenButton: false
+		});
+		var tool = new Cesium.DrawTool({
+			viewer:viewer,
+			isMeasure:true,  // 是否开启测量模式
+			isClampGround:true,  // 是否开启贴地模式
+	//        lineWidth:1.0    // 设置线宽
+		});
+		document.getElementById('point').onclick = function() {
+			tool.startPoint()  // 画点
+		};
+		document.getElementById('line').onclick = function() {
+			tool.startPolyline()  // 画线
+		};
+		document.getElementById('polygon').onclick = function() {
+			tool.startPolygon();  // 画面
+		};
+		document.getElementById('elevation').onclick = function() {
+			tool.startElevation();  // 量高
+		};
+
+		/*document.getElementById('mpoint').onclick = function() {
+			tool.startModelPoint() // 模型画点
+		};
+		document.getElementById('mline').onclick = function() {
+			tool.startModelPolyline()  // 模型画线
+		};
+		document.getElementById('mpolygon').onclick = function() {
+			tool.startModelPolygon();  // 模型画面
+		};
+		document.getElementById('melevation').onclick = function() {
+			tool.startModelElevation();  // 模型量高
+		};
+
+		document.getElementById('remove').onclick = function() {
+			tool.destory()
+		};*/
+</script>
+	
+</body>

@@ -1,0 +1,112 @@
+<!--
+	Format:https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer/tile/{z}/{y}/{x}
+	At first, I use HttpDebugger find this server, because ArcGIS Earth use this elevation3d server
+	Although it is height map form, in China, it is not easy to visit STK Terrain, it is also an appropriate solution.
+	Then I watched the tile content and the header is "CntZImage" which is the arcgis/lerc compression
+	Eventually, I create the ArcGisImageServerTerrainProvider class, so we can load thise terrain server easily, and you can download this file in Source/Core freely.
+	Note: ArcGIS HeightMap Terrain Server is WebMercatorTilingScheme.
+	There is a bug but I could not fix it without modifying the source code. For example, in level 13, I found some tiles have no height data,
+	the data is always 0, you can still request this tile. So, the state is TerrainState.RECEIVED
+-->
+<!DOCTYPE html>
+<head>
+    <title>CesiumSatellite</title>
+	<link href="../common/Cesium/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+	<link rel="stylesheet" href="../common/plugin/jq/jquery-modal/css/jquery.my-modal.1.1.winStyle.css">
+	<script src="../common/plugin/jq/jquery-modal/js/jquery.my-modal.1.1.js"></script>
+	<script type="text/javascript" src="../common/Cesium/Build/Cesium/Cesium.js"></script>
+	<script type="text/javascript" src="../common/js/Cesium_init.js"></script>
+	<style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+		}
+		#menuHolder {
+			position: absolute;
+			top:0px;
+			left: 0px;
+		}
+		#toolbar {
+			position: absolute;
+			top: 20px;
+			right: 30px;
+			z-index: 999;
+		}
+		table {
+			color :#fff;
+		}
+
+    </style>
+</head>
+<body>
+<!--
+	描述：cesium球
+-->
+<div id="cesiumContainer"></div>			
+<!--
+	描述：下面为模板
+-->
+<div class="m-modal">
+	<div class="m-modal-dialog">
+		<div class="m-top">
+			<h4 class="m-modal-title">
+				特征配置
+			</h4>
+			<span class="m-modal-close">&times;</span>
+		</div>
+		<div id="content" class="m-middle">
+			<!--content-->
+			
+		</div>
+		<div class="m-bottom">
+			<button class="m-btn-sure">确定</button>
+			<button class="m-btn-cancel">取消</button>
+		</div>
+	</div>
+</div>
+<!--
+	描述：右侧工具
+-->
+<div id="right-nav">
+	<div class="w">
+		<ul id="right-nav-list1">
+			<li><a><img src="./line.png"></a><div>测距离</div></li>
+			<li><a><img src="./area.png"></a><div>测面积</div></li>
+			<li><a><img src="./triangle.png"></a><div>三角测量</div></li>
+			<li><a><img src="./draw.png"></a><div>画笔</div></li>
+			<li><a><img src="./arrows.png"></a><div>标绘</div></li>
+			<li><a><img src="./rm.png"></a><div>删除</div></li>
+		</ul>
+	</div>
+</div>
+<!--
+描述：标绘
+-->
+<div id="plot"></div>
+<script>
+	//地图资源
+	var GoogleMap = ImageryProviderWebExtendTool.createGoogleMapsByUrl(Cesium, { url: "http://mt1.google.cn/vt/lyrs=s&hl=zh-CN&x={x}&y={y}&z={z}" });
+			var viewer = new Cesium.Viewer('cesiumContainer', {
+			imageryProvider: GoogleMap,
+			shouldAnimate : true,
+			selectionIndicator: false,
+			baseLayerPicker:false,
+			homeButton:false,
+			animation: true,
+			timeline:true,
+			geocoder: false,
+			sceneModePicker: false,
+			navigationHelpButton: false,
+			infoBox: false,
+			fullscreenButton: false
+		});
+		weatherController.initSelect(); //初始化查询
+	
+		var m1 = new MyModal.modal(function() {
+			var initData = weatherController.select(viewer);
+			//loadingShow(); //开启load
+			weatherController.init(initData,true); //自动build
+		});
+		m1.show();
+</script>
+	
+</body>

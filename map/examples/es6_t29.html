@@ -1,0 +1,62 @@
+<!--
+ * @Descripttion: 
+ * @version: 1.0
+ * @Author: zhangti
+ * @Date: 2019-11-20 17:51:52
+ * @LastEditors  : sueRimn
+ * @LastEditTime : 2020-01-16 10:41:24
+ -->
+<!--
+	Format:https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer/tile/{z}/{y}/{x}
+	At first, I use HttpDebugger find this server, because ArcGIS Earth use this elevation3d server
+	Although it is height map form, in China, it is not easy to visit STK Terrain, it is also an appropriate solution.
+	Then I watched the tile content and the header is "CntZImage" which is the arcgis/lerc compression
+	Eventually, I create the ArcGisImageServerTerrainProvider class, so we can load thise terrain server easily, and you can download this file in Source/Core freely.
+	Note: ArcGIS HeightMap Terrain Server is WebMercatorTilingScheme.
+	There is a bug but I could not fix it without modifying the source code. For example, in level 13, I found some tiles have no height data,
+	the data is always 0, you can still request this tile. So, the state is TerrainState.RECEIVED
+-->
+<!DOCTYPE html>
+<head>
+    <title>场景控制</title>
+	<style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+		}
+		.map-move-msg{
+			position: absolute;
+			bottom: 0px;
+			width: 100%;
+			height: 3%;
+			border:1px solid;
+			border-radius:2px; 
+			border-color: #505050cc;
+			background-color: #222d32eb;
+		}
+		.cesium-widget-credits{display:none!important; visibility:hide!important;}
+    </style>
+</head>
+<body>
+<!--
+  地图实体
+-->
+<div id="cesiumContainer"></div>
+<!--
+  描述：导航条下
+-->
+<div class="map-move-msg"></div>	
+<script type="module">
+    import {CV} from '../3d/CV.js';
+	new CV.load('A',()=>{
+		let earth = new CV.Earth("cesiumContainer");
+        //初始化
+        CV.CONFIG.INIT(earth.core);
+        //场景树
+        CV.CONFIG.createSceneTree(earth.core);
+        //鼠标信息
+        CV.CONFIG.initMouseInfo(earth.core); 
+	});
+
+</script>
+	
+</body>

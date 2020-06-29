@@ -1,0 +1,81 @@
+<!--
+ * @Descripttion: 
+ * @version: 1.0
+ * @Author: zhangti
+ * @Date: 2019-11-20 17:48:02
+ * @LastEditors: sueRimn
+ * @LastEditTime: 2020-01-14 10:04:14
+ -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="../2d_3d/src/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../2d_3d/src/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="../2d_3d/src/ol3/ol.css">
+    <link rel="stylesheet" href="../2d_3d/src/css/Popup.css">
+    <link rel="stylesheet" href="../2d_3d/src/css/LayersControl.css">
+    <style>
+      html, body, #map {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+      }
+      body {
+        padding-top: 50px;
+      }
+      .navbar .navbar-brand {
+        font-weight: bold;
+        font-size: 25px;
+        color: white;
+      }
+      #drag-info {
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+        margin-bottom: 0;
+        opacity: 0.7;
+      }
+    </style>
+    <script src="../2d_3d/src/ol3/ol-debug.js"></script>
+    <script src="../2d_3d/src/ol3-cesium/Cesium/Cesium.js"></script>
+    <script src="../2d_3d/src/ol3-cesium/ol3cesium.js"></script>
+    <script src="../2d_3d/src/jquery/jquery.js"></script>
+    <script src="../2d_3d/src/bootstrap/js/bootstrap.js"></script>
+    <title>Data Viewer</title>
+  </head>
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Data Viewer</a>
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li class="dropdown">
+            <a id="toolsDrop" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-eye" style="color: white"></i>&nbsp;&nbsp;Tools<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" id="toggle-globe"><i class="fa fa-globe"></i>&nbsp;&nbsp;Toggle globe view</a></li>
+              <li><a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" id="zoom-world"><i class="fa fa-arrows-alt"></i>&nbsp;&nbsp;Zoom to world</a></li>
+              <li><a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" id="clear-tracks"><i class="fa fa-trash-o"></i>&nbsp;&nbsp;Clear all tracks</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div><!--/.navbar-collapse -->
+    </div>
+    <div id="map"></div>
+    <div id="drag-info" class="alert alert-info alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+      Drag GPS track files on the map. GPX, KML and GeoJSON are supported.&nbsp;&nbsp;
+    </div>
+    <script src="../2d_3d/src/app/app.js"></script>
+  </body>
+</html>

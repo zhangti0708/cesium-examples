@@ -1,0 +1,88 @@
+<!--
+ * @Descripttion: 
+ * @version: 1.0
+ * @Author: zhangti
+ * @Date: 2019-11-20 17:51:52
+ * @LastEditors  : sueRimn
+ * @LastEditTime : 2020-01-17 17:11:32
+ -->
+<!--
+	Format:https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer/tile/{z}/{y}/{x}
+	At first, I use HttpDebugger find this server, because ArcGIS Earth use this elevation3d server
+	Although it is height map form, in China, it is not easy to visit STK Terrain, it is also an appropriate solution.
+	Then I watched the tile content and the header is "CntZImage" which is the arcgis/lerc compression
+	Eventually, I create the ArcGisImageServerTerrainProvider class, so we can load thise terrain server easily, and you can download this file in Source/Core freely.
+	Note: ArcGIS HeightMap Terrain Server is WebMercatorTilingScheme.
+	There is a bug but I could not fix it without modifying the source code. For example, in level 13, I found some tiles have no height data,
+	the data is always 0, you can still request this tile. So, the state is TerrainState.RECEIVED
+-->
+<!DOCTYPE html>
+
+<head>
+	<title>控件</title>
+	<style>
+		html,
+		body,
+		#mapmap {
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+		}
+
+		.btn {
+			position: absolute;
+			top: 5px;
+			left: 5px;
+			padding: 2px;
+		}
+	</style>
+</head>
+
+<body>
+	<!--
+  地图实体
+-->
+	<div id="mapmap"></div>
+
+	<!--
+  描述：导航条下
+-->
+	<div class="map-move-msg"></div>
+	<script type="module">
+		import OV from '../2d/OV.js';
+		let initOption = {
+			layer: [OV.OSM_LAYER],
+			zoom: 4, //地图等级
+			center: [101.4173, 37.9204], //中心点
+			rotation: 0, //旋转
+			maxZoom: 18,//最大等级
+			minzoom: 2,//最小等级
+			loading: true, //加载控件
+			zoomSlider: true, //底图缩放控件
+			fullScreen: true, //全屏控件
+			//zoomCtl: false,
+			overviewMap: true, //鹰眼控件
+			rotate: false, //旋转控件
+		};
+		new OV('mapmap', initOption).then((olmap) => {
+			let measureTool = olmap.initMeasure();
+			//创建面板
+			let Options = function () {
+				this.message = 'measureLength';
+			}
+			console.log(measureTool);
+			measureTool.setTool(true, 'measureLength', true) //面积
+			let option = new Options();
+			let gui = new dat.GUI();
+			gui.add(option, 'message', ['measureLength','measureArea','measureCircle']).name("测量类型").onChange(function (value) {
+					
+				measureTool.setTool(true, value, true) //面积
+				
+			});
+			$('.dg.ac').css('top', '5%');
+		});
+	</script>
+
+</body>

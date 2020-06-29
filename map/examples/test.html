@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<head>
+    <title>CesiumSatellite</title>
+	<link href="../common/Cesium/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+	<link rel="stylesheet" href="../common/plugin/jq/jquery-modal/css/jquery.my-modal.1.1.winStyle.css">
+	<script src="../common/plugin/jq/jquery-modal/js/jquery.my-modal.1.1.js"></script>
+	<script type="text/javascript" src="../common/Cesium/Build/Cesium/Cesium.js"></script>
+	<script type="text/javascript" src="../common/js/Cesium_init.js"></script>
+	<script src="https://unpkg.com/dayjs"></script>           
+	<script src="../libs/sensor.js"></script>
+	<style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+		}
+		#menuHolder {
+			position: absolute;
+			top:0px;
+			left: 0px;
+		}
+		#toolbar {
+			position: absolute;
+			top: 20px;
+			right: 30px;
+			z-index: 999;
+		}
+		table {
+			color :#fff;
+		}
+    </style>
+</head>
+<body>
+<!--
+	描述：cesium球
+-->
+<div id="cesiumContainer"></div>	
+<!--
+	描述：下面为模板
+-->
+<div class="m-modal">
+	<div class="m-modal-dialog">
+		<div class="m-top">
+			<h4 class="m-modal-title">
+				特征配置
+			</h4>
+			<span class="m-modal-close">&times;</span>
+		</div>
+		<div id="content" class="m-middle">
+			<!--content-->
+			
+		</div>
+		<div class="m-bottom">
+			<button class="m-btn-sure">确定</button>
+			<button class="m-btn-cancel">取消</button>
+		</div>
+	</div>
+</div>
+<!--
+	描述：右侧工具
+-->
+<div id="right-nav">
+	<div class="w">
+		<ul id="right-nav-list1">
+			<li><a><img src="./line.png"></a><div>测距离</div></li>
+			<li><a><img src="./area.png"></a><div>测面积</div></li>
+			<li><a><img src="./triangle.png"></a><div>三角测量</div></li>
+			<li><a><img src="./draw.png"></a><div>画笔</div></li>
+			<li><a><img src="./arrows.png"></a><div>标绘</div></li>
+			<li><a><img src="./rm.png"></a><div>删除</div></li>
+		</ul>
+	</div>
+</div>
+<!--
+	描述：标绘
+-->
+<div id="plot"></div>
+<script>
+
+	try{
+
+		//地图资源
+		var GoogleMap = ImageryProviderWebExtendTool.createGoogleMapsByUrl(Cesium, { url: "http://mt1.google.cn/vt/lyrs=s&hl=zh-CN&x={x}&y={y}&z={z}" });
+				var viewer = new Cesium.Viewer('cesiumContainer', {
+			imageryProvider: GoogleMap,
+			shouldAnimate : false,
+			selectionIndicator: false,
+			baseLayerPicker:false,
+			homeButton:false,
+			animation: true,
+			timeline:true,
+			geocoder: false,
+			sceneModePicker: false,
+			navigationHelpButton: false,
+			infoBox: true,
+			fullscreenButton: false
+		});
+		var radarEntity = [];
+		//雷达目标体
+		var createEntity = function(radar){
+			if(radar.length == 0 && radar == undefined)return;
+			for(var n in radar){//radar
+				var l,r;
+				var positions = radar[n].position.getValue();
+				if(positions.length == 0) return;
+				var cartographic = viewer.scene.globe.ellipsoid.cartesianToCartographic(positions);
+				var lat = Cesium.Math.toDegrees(cartographic.latitude),lon = Cesium.Math.toDegrees(cartographic.longitude), height = cartographic.height;
+				//radarscan
+				r = new Cesium.HeadingPitchRoll(Cesium.Math.toRadians(90),
+				Cesium.Math.toRadians(0),Cesium.Math.toRadians(0));
+				l = Cesium.Cartesian3.fromDegrees(lon, lat, height);
+				var e = viewer.entities.add({
+					position: l,
+					orientation: Cesium.Transforms.headingPitchRollQuaternion(l,r),
+					rectangularSensor: new Cesium.RectangularSensorGraphics({
+							radius: 380000,
+							xHalfAngle: Cesium.Math.toRadians(50),
+							yHalfAngle: Cesium.Math.toRadians(50),
+							material: new Cesium.Color(0, 1, 1, .4),
+							lineColor: new Cesium.Color(0, 1, 1, 1),
+							showScanPlane: true,
+							scanPlaneColor: new Cesium.Color(0, 1, 1, 1),
+							scanPlaneMode: "vertical",
+							scanPlaneRate: 3,
+							showThroughEllipsoid: !1
+						})
+					});
+					radarEntity.push(e);
+			}
+			
+			viewer.scene.camera.moveEnd.addEventListener(function(){
+				if(radarEntity.length == 0 && viewer == null)return;
+				for(var i in radarEntity){
+					height = (Math.ceil(viewer.camera.positionCartographic.height)/50);
+					if(height >= 800){
+						radarEntity[i].rectangularSensor.radius = height;
+					}else{
+						radarEntity[i].rectangularSensor.radius = 800;
+					}
+				}
+       		 })
+		}
+		//卫星扫描物 实现1-----------------------------------------------------------------------------------
+		var scan = function(satellite){
+				if(satellite.length == 0 && satellite == undefined)return;
+				for(var n in satellite){
+					var height = [],property = new Cesium.SampledPositionProperty();
+					var property2 = new Cesium.SampledProperty(Number);
+					for (var ind = 0; ind < 288; ind++) { //300 * n 秒数
+						var time = Cesium.JulianDate.addSeconds(viewer.clock.startTime, 300*ind, new Cesium.JulianDate());
+						var position = satellite[n].position.getValue(time); //satellite的属性
+						var cartographic = viewer.scene.globe.ellipsoid.cartesianToCartographic(position);
+						var lat = Cesium.Math.toDegrees(cartographic.latitude),
+							lng = Cesium.Math.toDegrees(cartographic.longitude),
+							hei = parseFloat(cartographic.height/1.9);
+							height.push(cartographic.height);
+						property.addSample(time, Cesium.Cartesian3.fromDegrees(lng, lat,0));
+						/*property2.addSample(time,cartographic.height * 2);*/
+					}
+					//sacn entity
+					var param = {
+						length: Math.max.apply(null,height),
+						slices:4,
+						material:new Cesium.Color(0, 1, 1, .4)
+					}
+					
+					entity = new _cesiumTool({viewer:this.viewer}).createEntity({handleType:"cylinder",p:param});
+					//add
+					entity.position = property;//设置插值位置时使用的算法和度数。
+					//entity.cylinder.length = property2;
+					entity.position.setInterpolationOptions({ //设定位置的插值算法
+						interpolationDegree: 5,
+						interpolationAlgorithm: Cesium.LAGRANGE
+					});
+				}
+		}
+		//卫星扫描物 实现2--------------------------------------------------------------------------------
+		var createPoint = (function(){
+			function _(positions,satellite){
+				this.options = {
+					 cylinder: {
+						HeightReference: Cesium.HeightReference.RELATIVE_TO_GROUND, //表示相对于地形的位置。
+						length:600000,     //长度
+						topRadius:0,    //顶点半径
+						bottomRadius:600000 / 2,  //底部半径
+						material:new Cesium.Color(0, 1, 1, .4),
+						slices:4
+					}
+				}
+				this.positions = positions;
+				this.satellite = satellite;
+				this._init();
+			}
+			_.prototype._init = function(){
+				var _self = this;
+				var _update = function(){
+					var positions = _self.satellite.position.getValue(viewer.clock.currentTime);
+					return scan_p = getPoint(positions);
+				};
+				var _length = function(){
+					var positions = _self.satellite.position.getValue(viewer.clock.currentTime);
+					var cartographic = viewer.scene.globe.ellipsoid.cartesianToCartographic(positions);
+					return cartographic.height * 2;
+				}
+				this.options.position = new Cesium.CallbackProperty(_update,false);
+				this.options.cylinder.length = new Cesium.CallbackProperty(_length,false);
+				viewer.entities.add(this.options);
+			};
+			return _;
+		})();
+		var getPoint = function(positions){
+			var cartographic = viewer.scene.globe.ellipsoid.cartesianToCartographic(positions);
+			var lat = Cesium.Math.toDegrees(cartographic.latitude),
+						lng = Cesium.Math.toDegrees(cartographic.longitude),
+						hei = parseFloat(cartographic.height/4);
+			return Cesium.Cartesian3.fromDegrees(lng, lat,0);
+		}
+		var scan2 = function(){
+			if(satelliteAll.length == 0 && satelliteAll == undefined)return;
+			for(var i in satelliteAll){
+				var positions = satelliteAll[i].position.getValue(viewer.clock.currentTime);
+				scan_p = getPoint(positions);
+				new createPoint(scan_p,satelliteAll[i]);
+			}
+		}
+		/*****************************************************  第一种方案 czml 时间段显示 *******************************************************************************/
+		//全局的属性
+		var selectedEntity = new Cesium.Entity();
+		var renderTime,passTime = [],pass_old = [],iden = true,pickedFeature = null,num_pass = 0;
+		//卫星数据格式化
+		var getSatelliteTime = function(transit){
+			if(transit.length != 0 || transit != undefined){
+			    passTime = [],pass_old = []; //查看方式区分开 以免冲突
+				for(var n in transit){
+					var interval = [],interval_old = [];
+					var n_interval = transit[n].availability._intervals;
+					for(var i in n_interval){
+						var start = dayjs(Cesium.JulianDate.addHours(n_interval[i].start,-8,new Cesium.JulianDate())).format("YYYY-MM-DD HH:mm:ss");
+						var stop = dayjs(Cesium.JulianDate.addHours(n_interval[i].stop,-8,new Cesium.JulianDate())).format("YYYY-MM-DD HH:mm:ss");
+						interval.push({name:transit[n].name,"startTime":start,"stopTime":stop,"interval":dayjs(stop).diff(dayjs(start), 'millisecond')});
+						interval_old.push({name:transit[n].name,"startTime":start,"stopTime":stop,"interval":dayjs(stop).diff(dayjs(start), 'millisecond')});
+					}
+					passTime.push(interval);
+					pass_old.push(interval_old);
+				}
+			}
+		}
+		var index_rm = function(n){
+			if(pass_old.length == 0)return;
+			pass_old[n].splice(0,1); //删除第一个
+		}
+		var pass = function(clock){
+			//当前时间
+			var currentTime = dayjs(Cesium.JulianDate.addHours(clock.currentTime,-8,new Cesium.JulianDate())).format("YYYY-MM-DD HH:mm:ss");
+			return currentTime;
+		}
+		//弹出框组件
+		var infoTable_1 = function(currentTime){
+			if(pass_old.length == 0)return;
+			var tr = "",table = `<table class="cesium-infoBox-defaultTable"><thead><tr><th>卫星</th><th>倒计时(ms)</th><th>通信开始(date)</th><th>通信结束(date)</th><th>通信时长(ms)</th></tr></thead><tbody>`;
+			for(var n in pass_old){
+				if(pass_old[n].length == 0)continue;
+				var interval_pass = pass_old[n][0]; //始终取第一个 
+				renderTime =  dayjs(interval_pass.startTime).diff(dayjs(currentTime));
+				if(renderTime <= 0){
+					if(renderTime <= -(interval_pass.interval)){
+						index_rm(n);
+					}else{
+						renderTime = "PASS";
+					}
+				}
+				tr += `<tr><td>${interval_pass.name}</td><td>${renderTime}</td><td>${interval_pass.startTime}</td><td> ${interval_pass.stopTime}</td><td> ${interval_pass.interval}</td></tr>`;
+			}
+			return table + tr + `</tbody></table>`;
+		}
+
+		var infoTable_2 = function(f_name,cartesian){
+			if(f_name == undefined && cartesian == undefined)return;
+			var tr = "",table = `<h2> Position </h2><table class="cesium-infoBox-defaultTable"><thead><tr><th>Name</th><th>Latitude</th><th>Longitude</th><th>Elevation</th></tr></thead><tbody>`;
+			var f_point = [ parseInt(cartesian.longitude / Math.PI * 180), parseInt(cartesian.latitude / Math.PI * 180)];
+			tr = `<tr><td>${f_name}</td><td>${f_point[0]}°</td><td>${f_point[1]}°</td><td> ${parseInt(cartesian.height)}</td></tr>`;
+			return table + tr + `</tbody></table>`;
+		}
+
+		var infoTable_3 = function(currentTime,featureName){
+			if(passTime.length == 0 && featureName == undefined)return;
+			var t_interval = function(){
+				for(var i in passTime){if(passTime[i][0].name.indexOf(featureName)!=-1)return passTime[i];}
+			}
+			var interval = t_interval();
+			var tr = "",table = `<table class="cesium-infoBox-defaultTable"><thead><tr><th>卫星</th><th>倒计时(ms)</th><th>通信开始(date)</th><th>通信结束(date)</th><th>通信时长(ms)</th></tr></thead><tbody>`;
+			for(var i in interval){
+				renderTime =  dayjs(interval[i].startTime).diff(dayjs(currentTime));
+				if(renderTime <= 0)renderTime = 0;
+				tr += `<tr><td>${interval[i].name}</td><td>${renderTime}</td><td>${interval[i].startTime}</td><td> ${interval[i].stopTime}</td><td> ${interval[i].interval}</td></tr>`;
+			}
+			return table + tr + `</tbody></table>`;
+		}
+
+		//地面雷达监控
+		var getSatelliteInfo = function(){
+		    if(transit.length == 0)return;
+			getSatelliteTime(transit);//格式化通信数据
+			selectedEntity.name = "PASS";
+			selectedEntity.description = infoTable_1(dayjs(Cesium.JulianDate.addHours(viewer.clock.currentTime,-8,new Cesium.JulianDate())).format("YYYY-MM-DD HH:mm:ss"));
+			viewer.selectedEntity = selectedEntity;
+			viewer.clock.onTick.addEventListener(function(clock) {
+					if(!clock.shouldAnimate)return;
+					if(iden)selectedEntity.description = infoTable_1(pass(clock));//标识符  进来展示所有卫星信息
+					if(!iden){
+						if(pickedFeature == null)return;
+						if("radar" == pickedFeature.type){
+							pickedFeature.id.description = pickedFeature.temp + infoTable_1(pass(clock));
+						}else{
+							var position = pickedFeature.id.position.getValue(clock.currentTime);
+							var f_position = viewer.scene.globe.ellipsoid.cartesianToCartographic(position);
+							pickedFeature.id.description = infoTable_2( pickedFeature.id.name,f_position) + ' <h2> Passes </h2>' + infoTable_3(pass(clock),pickedFeature.id.name);
+						}
+					}
+			});	
+			viewer.clock.onStop.addEventListener(function(clock){
+			    //格式化卫星数据
+			   if(transit.length == 0)return;
+			   getSatelliteTime(transit);
+			    
+			});
+		}
+
+		//点击追踪
+		new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas).setInputAction(function(click){
+			if(viewer.scene.pick(click.position) == undefined)return;
+			pickedFeature = viewer.scene.pick(click.position);
+			if (!Cesium.defined(pickedFeature) && pickedFeature == undefined)return;
+			if(pickedFeature.id.description == undefined)return; //自己创建的
+			var f_name = pickedFeature.id.name,f_position,table;
+			try{
+				var position = pickedFeature.id.position.getValue();
+				pickedFeature.type = "radar";
+			}catch(e){
+				var position = pickedFeature.id.position.getValue(viewer.clock.currentTime);
+				pickedFeature.type = "satellite";
+			}
+			f_position = viewer.scene.globe.ellipsoid.cartesianToCartographic(position);
+			pickedFeature.id.description  = infoTable_2(f_name,f_position);
+			//viewer.selectedEntity = selectedEntity;
+			pickedFeature.id.name  = f_name;
+			pickedFeature.temp = pickedFeature.id.description + "<h2> Passes <h2>";
+			iden = false; //点击事件改变标识符
+
+		},Cesium.ScreenSpaceEventType.LEFT_DOWN);
+
+		/*****************************************************  第二种方案 判断实时位置是否在雷达的扫描范围 *******************************************************************************/
+		var PolyLinePrimitive = (function(){
+			function _(positions1,positions2){
+				this.options = {
+					polyline : {
+						show : true,
+						positions : [],
+						material : Cesium.Color.CORNFLOWERBLUE,
+						width : 5
+					}
+				};
+				this.positions = [positions1];
+				this._init();
+			}
+		
+			_.prototype._init = function(){
+				var _self = this;
+				var _update = function(){
+					return _self.positions;
+				};
+				//实时更新polyline.positions
+				this.options.polyline.positions = new Cesium.CallbackProperty(_update,false);
+				viewer.entities.add(this.options);
+
+				//this.positions.push(positions2);
+			};
+		
+			return _;
+		})();
+		/** 
+		 *  判断一个点是否在圆的内部 
+		 *  @param point  测试点坐标 
+		 *  @param circle 圆心坐标 
+		 *  @param r 圆半径 
+		 *  返回true为真，false为假 
+		 *  */  
+		 var pointInsideCircle = function(point, circle, r) {  
+			if (r===0) return false  
+			var dx = circle[0] - point[0]  
+			var dy = circle[1] - point[1]  
+			return dx * dx + dy * dy <= r * r  
+		}
+		var createPolyline = function(clock){
+			var p_radar = viewer.scene.globe.ellipsoid.cartesianToCartographic(radar.position.getValue());
+			var p_s1 = viewer.scene.globe.ellipsoid.cartesianToCartographic(satellite1.position.getValue(clock.currentTime));
+			var p_s2 = viewer.scene.globe.ellipsoid.cartesianToCartographic(satellite1.position.getValue(clock.currentTime));
+			var radar_point = [ parseInt(p_radar.longitude / Math.PI * 180), parseInt(p_radar.latitude / Math.PI * 180)];
+			var s1_point = [ parseInt(p_s1.longitude / Math.PI * 180), parseInt(p_s1.latitude / Math.PI * 180)];
+			var s2_point = [ parseInt(p_s2.longitude / Math.PI * 180), parseInt(p_s2.latitude / Math.PI * 180)];
+			if(pointInsideCircle(s1_point,radar_point,50000000)){
+					console.log("连接");
+			}
+
+		}
+		
+		var radar,satelliteAll = [],transit = [];
+		//load数据
+		viewer.dataSources.add(Cesium.CzmlDataSource.load("../common/data/czml/test.czml")).then(function(dataSource) {
+			radar = dataSource.entities.getById("Facility/AGI");
+			var satellite1 = dataSource.entities.getById("Satellite/ISS");
+			var satellite2 = dataSource.entities.getById("Satellite/Geoeye1");
+			var transit1 = dataSource.entities.getById("Facility/AGI-to-Satellite/ISS");
+			var transit2 = dataSource.entities.getById("Facility/AGI-to-Satellite/Geoeye1");
+			satelliteAll = [satellite1,satellite2]
+			transit = [transit1,transit2]
+			scan2();
+			createEntity([radar]);
+          	getSatelliteInfo()
+		})
+	
+	}catch(e){
+		console.log(e);
+	}
+</script>
+	
+</body>

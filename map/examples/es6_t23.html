@@ -1,0 +1,66 @@
+<!--
+ * @Descripttion: 
+ * @version: 1.0
+ * @Author: zhangti
+ * @Date: 2019-11-20 17:51:52
+ * @LastEditors  : sueRimn
+ * @LastEditTime : 2020-01-13 15:50:54
+ -->
+<!--
+	Format:https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer/tile/{z}/{y}/{x}
+	At first, I use HttpDebugger find this server, because ArcGIS Earth use this elevation3d server
+	Although it is height map form, in China, it is not easy to visit STK Terrain, it is also an appropriate solution.
+	Then I watched the tile content and the header is "CntZImage" which is the arcgis/lerc compression
+	Eventually, I create the ArcGisImageServerTerrainProvider class, so we can load thise terrain server easily, and you can download this file in Source/Core freely.
+	Note: ArcGIS HeightMap Terrain Server is WebMercatorTilingScheme.
+	There is a bug but I could not fix it without modifying the source code. For example, in level 13, I found some tiles have no height data,
+	the data is always 0, you can still request this tile. So, the state is TerrainState.RECEIVED
+-->
+<!DOCTYPE html>
+<head>
+    <title>三维模型</title>
+	<style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+		}
+    </style>
+</head>
+<body>
+<!--
+	æ��è¿°ï¼šcesiumç�ƒ
+-->
+<div id="cesiumContainer"></div>		
+<script type="module">
+	import {CV} from '../3d/CV.js';
+	new CV.load('A',()=>{
+		let earth = new CV.Earth("cesiumContainer",{ 
+			imageryProvider:CV.TAG.BASELAYER.GOOGLEIMAGERY(),
+			skyBox : CV.TAG.SKYBOX.customStyle(),
+			infoBox: true
+		});
+		//初始化
+		let entitys = new CV.Entitys(earth.core), 
+		ModelManager = new CV.ModelManager(earth.core),
+		camera = new CV.Camera(earth.core),modu;
+		//默认
+		modu = entitys.add(ModelManager.createCar(Cesium.Cartesian3.fromDegrees(116.538799 ,39.9948,50)));
+		camera.aircraftView(modu);
+		//创建面板
+		let Options = function () {
+            this.message = 'Car';
+        }
+        let option = new Options();
+        let gui = new dat.GUI();
+        gui.add(option, 'message', ['Air','Car','WoodTower']).name("模型选择").onChange(function (value) {
+			entitys.remove(modu);
+			switch(value){
+				case "Air":modu = entitys.add(ModelManager.createAir(Cesium.Cartesian3.fromDegrees(116.538799 ,39.9948,50)));break;
+				case "Car":modu = entitys.add(ModelManager.createCar(Cesium.Cartesian3.fromDegrees(116.538799 ,39.9948,50)));break;
+				case "WoodTower":modu = entitys.add(ModelManager.createWoodTower(Cesium.Cartesian3.fromDegrees(116.538799 ,39.9948,50)));break;
+			 }
+			 camera.aircraftView(modu);
+        });
+	});
+</script>
+	
+</body>

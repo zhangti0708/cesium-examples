@@ -1,0 +1,31 @@
+ul,li{
+	padding: 0;
+	margin: 0;
+}
+.contextmenu-ul{
+	background: rgba(43,44,47,.6);
+	border: 1px solid #2b2c2f;
+	min-width: 110px;
+	list-style: none; 
+	font-size: 14px;
+}
+.contextmenu-ul a{
+	border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+	padding: 6px 10px;
+	transition: background-color .25s;
+	display: block;
+	clear: both;
+	font-weight: 400;
+	line-height: 1.6;
+	white-space: nowrap;
+	color: #edffff;
+	text-decoration: none;
+}
+.contextmenu-ul li:last-child a{
+	border-bottom:none;
+}
+.contextmenu-ul a:hover{
+	background-color: #444d59;
+	color: #fff;
+	text-decoration: none;
+}

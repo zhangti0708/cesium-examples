@@ -1,0 +1,65 @@
+<!--
+ * @Descripttion: 
+ * @version: 1.0
+ * @Author: zhangti
+ * @Date: 2019-09-19 09:23:52
+ * @LastEditors  : sueRimn
+ * @LastEditTime : 2020-01-13 18:01:41
+ -->
+
+ <!doctype html>
+ <html lang="en">
+ <head>
+	 <meta charset="utf-8">
+	 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	 <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+	 <meta name="mobile-web-app-capable" content="yes">
+	 <meta name="apple-mobile-web-app-capable" content="yes">
+	 <title>API</title>
+	 <!--
+		 css
+	 -->
+	 <link href="../3d/static/Cesium/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+	 <!--
+		 js
+	 -->
+	 <script src="../3d/static/Cesium/Build/CesiumUnminified/CesiumBy.js"></script>
+	 <script src="../libs/CesiumBuild.js"></script>
+	 <script src="../libs/jquery.min.js"></script>
+	 <style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+		}
+		.btn{
+			position: absolute;
+			top: 5px;
+			left: 5px;
+			padding: 2px;
+		}
+    </style> 
+ </head>
+ <body>
+ <!--
+	 描述：cesium球
+ -->
+ <div id="cesiumContainer"></div>
+ <div class = 'btn'>
+	 <button id="cs1">geojson</button>
+	 <button id="cs2">视域</button>
+ </div>
+ <script type="module">
+	 import {CV} from '../3d/CV.js';
+	 let Earth = new CV.Earth('cesiumContainer',{ 
+		imageryProvider:CV.TAG.BASELAYER.GOOGLEIMAGERY(),
+		skyBox : CV.TAG.SKYBOX.customStyle()
+	});
+	 $('#cs1').on('click',function(){
+		let dataSource = new CV.dataManager(Earth.core);
+		dataSource.createGeoJsonData({url:'../3d/data/gugong.geojson'});
+	 });
+	 $('#cs2').on('click',function(){
+		 let submerged = new CV.VisualField(Earth.core,{});
+	 });
+ </script>
+ </body>
+ </html>
