@@ -6,10 +6,14 @@
 ## 学习cesium 添加的一些拓展示例和插件<br>
 
  ### 使用
+ 
+ ##### 打开 https://gitee.com/ 登录
+ 
+ ##### 新建仓库 选择导入仓库 https://github.com/zhangti0708/cesium-exmples.git
+ 
+ ##### 创建仓库并 git clone 到本地即可. 一分钟左右
 
- ##### git clone https://github.com/zhangti0708/cesiumEXP.git
-
- ##### unzip cesiumEXP.zip
+ ##### unzip cesium-exmples.zip
 
  ##### 将map目录直接放在web服务器下直接浏览
 
