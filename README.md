@@ -23,11 +23,14 @@
  ## cesium功能插件
  
  ##### cesium-measure
- 三维量测工具:https://github.com/zhangti0708/cesium-measure
+ ###### 三维量测工具:https://github.com/zhangti0708/cesium-measure
  
  ##### cesium-viewshed
  ###### 三维分析可视域:https://github.com/zhangti0708/cesium-viewshed
  
+ ##### cesium-videoshed
+ ###### 三维分析视频投射: https://github.com/zhangti0708/cesium-videoshed
+
  ##### cesium-transform
  ###### 3DTileset矩阵调整开源工具:https://github.com/zhangti0708/cesium-transform
  
