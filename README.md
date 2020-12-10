@@ -37,6 +37,9 @@
  ##### cesium-tilesetEffect
  ###### 3DTileset模型Shader特效插件:https://github.com/zhangti0708/cesium-tilesetEffect
  
+ ##### cesium-materialLine
+ ###### 三维实体材质线插件: https://github.com/zhangti0708/cesium-materialLine
+ 
  ##### cesium-city3d
  ###### 基于超图的示例:https://github.com/zhangti0708/cesium-city3d
  
