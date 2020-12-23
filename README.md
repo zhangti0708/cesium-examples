@@ -9,7 +9,7 @@
  
  ##### 打开 https://gitee.com/ 登录
  
- ##### 新建仓库 选择导入仓库 https://github.com/zhangti0708/cesium-exmples.git
+ ##### 新建仓库 选择导入仓库 https://github.com/zhangti0708/cesium-examples.git
  
  ##### 创建仓库并 git clone 到本地即可. 一分钟左右
 
