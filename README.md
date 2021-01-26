@@ -25,6 +25,9 @@
  ##### cesium-measure
  ###### 三维量测工具:https://github.com/zhangti0708/cesium-measure
  
+ ##### cesium-graphicBuffer
+ ###### 动态缓冲区效果 https://github.com/zhangti0708/cesium-graphicBuffer
+ 
  ##### cesium-viewshed
  ###### 三维分析可视域:https://github.com/zhangti0708/cesium-viewshed
  
