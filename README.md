@@ -94,35 +94,6 @@
  <a href="http://zhangticcc.gitee.io/webgis/#/login?redirect=%2Fdashboard"><img src="https://img-blog.csdnimg.cn/20200527171426876.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MDkwMjUyNw==,size_16,color_FFFFFF,t_70" height="80%" width="80%"  /></a>&nbsp;
  
  <a href="http://zhangticcc.gitee.io/webgis/#/login?redirect=%2Fdashboard"><img src=" https://img-blog.csdnimg.cn/2020051216060748.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MDkwMjUyNw==,size_16,color_FFFFFF,t_70" height="80%" width="80%"  /></a>&nbsp;
-  
-  
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  
- 
-  
-  
- 
- ## cesium渲染增强(不开源)
- 
- 环境光照<br>
-<a href=""><img src="https://img-blog.csdnimg.cn/5629962d88df46a3b38cc416a20d5a21.gif" height="80%" width="80%"  /></a>&nbsp;
-
- 大气散射<br>
-<a href=""><img src="https://img-blog.csdnimg.cn/ce1bd67bf7ab4bb08fb3c65fd851b043.gif" height="80%" width="80%"  /></a>&nbsp;
-
- 体积云<br>
-<a href=""><img src="https://img-blog.csdnimg.cn/5f28c8d6864c4e7e9f763aa2d9e3f24f.gif" height="80%" width="80%"  /></a>&nbsp;
-
- 水面特效<br>
-<a href=""><img src="https://img-blog.csdnimg.cn/d3ef484f45b946a39ebcb850e43c02d1.gif" height="80%" width="80%"  /></a>&nbsp;
 
 
 
