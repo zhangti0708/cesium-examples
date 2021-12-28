@@ -46,6 +46,9 @@
  ##### cesium-city3d
  ###### 基于超图的示例:https://github.com/zhangti0708/cesium-city3d
  
+ ##### cesium-d3kit
+ ###### 基于cesium的基础功能封装插件: https://github.com/zhangti0708/cesium-city3d/blob/master/cesium-d3kit.js
+ 
  ##### new-CesiumGraph
  ###### 三维雷达探测器修改:https://github.com/zhangti0708/new-CesiumGraph
  
@@ -94,8 +97,16 @@
  <a href="http://zhangticcc.gitee.io/webgis/#/login?redirect=%2Fdashboard"><img src="https://img-blog.csdnimg.cn/20200527171426876.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MDkwMjUyNw==,size_16,color_FFFFFF,t_70" height="80%" width="80%"  /></a>&nbsp;
  
  <a href="http://zhangticcc.gitee.io/webgis/#/login?redirect=%2Fdashboard"><img src=" https://img-blog.csdnimg.cn/2020051216060748.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MDkwMjUyNw==,size_16,color_FFFFFF,t_70" height="80%" width="80%"  /></a>&nbsp;
+  
+ ## 基于cesium的渲染增强: 
+ 
+<a><img src="https://img-blog.csdnimg.cn/ce1bd67bf7ab4bb08fb3c65fd851b043.gif" height="80%" width="80%"  /></a>&nbsp;
+ 
+<a><img src="https://img-blog.csdnimg.cn/5629962d88df46a3b38cc416a20d5a21.gif" height="80%" width="80%"  /></a>&nbsp;
+ 
+<a><img src="https://img-blog.csdnimg.cn/5f28c8d6864c4e7e9f763aa2d9e3f24f.gif" height="80%" width="80%"  /></a>&nbsp;
 
-
+<a><img src="https://img-blog.csdnimg.cn/531d6548349549cb88490a271ab6e84e.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5ZWK5Zie5Zie5Zie5Zie,size_20,color_FFFFFF,t_70,g_se,x_16" height="80%" width="80%"  /></a>&nbsp;
 
 
 
