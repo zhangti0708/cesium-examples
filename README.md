@@ -22,6 +22,9 @@
 
  ## cesium功能插件
  
+ ##### cesium-d3kit
+ ###### 基于cesium的基础功能封装插件: https://github.com/zhangti0708/cesium-d3kit
+ 
  ##### cesium-measure
  ###### 三维量测工具:https://github.com/zhangti0708/cesium-measure
  
@@ -45,9 +48,6 @@
  
  ##### cesium-city3d
  ###### 基于超图的示例:https://github.com/zhangti0708/cesium-city3d
- 
- ##### cesium-d3kit
- ###### 基于cesium的基础功能封装插件: https://github.com/zhangti0708/cesium-city3d/blob/master/cesium-d3kit.js
  
  ##### new-CesiumGraph
  ###### 三维雷达探测器修改:https://github.com/zhangti0708/new-CesiumGraph
