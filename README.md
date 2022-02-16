@@ -54,6 +54,9 @@
  
  ##### 后续持续增加其他效果和分析插件
  
+ ## 基于cesium的小场景
+ 
+ ###### 部分源码包地址:https://mianbaoduo.com/o/aleilei/work
  
  ## cesium城市可视化
  
